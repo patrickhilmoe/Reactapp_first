@@ -1,25 +1,87 @@
-import logo from './logo.svg';
+import React, { Component, useState } from 'react';
+import { Navbar, NavbarBrand } from 'reactstrap';
+import Array from './components/ArrayTestingComponent';
 import './App.css';
+import * as XLSX from 'xlsx';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state =
+            [items, setItems] = useState([])
+    }
+
+    readExcel=(file)=>{
+
+        const promise = new Promise((resolve,reject)=>{
+
+            const fileReader= new FileReader();
+            fileReader.readAsArrayBuffer(file);
+
+            fileReader.onload=(e)=>{
+                const bufferArray = e.target.result;
+
+                const wb = XLSX.read(bufferArray, {type:'buffer'});
+
+                const wsname = wb.SheetNames[0];
+
+                const ws = wb.Sheets[wsname];
+
+                const data = XLSX.utils.sheet_to_json(ws);
+
+                resolve(data);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+
+        promise.then((d) => {
+            setItems(d);
+        })
+
+    }
+
+    render() {
+        return (
+          <div className="App">
+            <Navbar dark color="primary">
+              <div className="container">
+                <NavbarBrand href="/">Testing Space</NavbarBrand>
+              </div>
+            </Navbar>
+            <div>
+              <input
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  this.readExcel(file);
+                }}
+              />
+            </div>
+            <Array />
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Model</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((d) => (
+                  <tr key={d.Name}>
+                    <th>{d.Name}</th>
+                    <td>{d.Model}</td>
+                    <td>{d.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+    }
 }
 
 export default App;
