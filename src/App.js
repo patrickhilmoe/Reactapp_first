@@ -4,84 +4,75 @@ import Array from './components/ArrayTestingComponent';
 import './App.css';
 import * as XLSX from 'xlsx';
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state =
-            [items, setItems] = useState([])
-    }
+function App() {
+  const [items, setItems] = useState([]);
 
-    readExcel=(file)=>{
+  const readExcel = (file) => {
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
 
-        const promise = new Promise((resolve,reject)=>{
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
 
-            const fileReader= new FileReader();
-            fileReader.readAsArrayBuffer(file);
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
 
-            fileReader.onload=(e)=>{
-                const bufferArray = e.target.result;
+        const wsname = wb.SheetNames[0];
 
-                const wb = XLSX.read(bufferArray, {type:'buffer'});
+        const ws = wb.Sheets[wsname];
 
-                const wsname = wb.SheetNames[0];
+        const data = XLSX.utils.sheet_to_json(ws);
 
-                const ws = wb.Sheets[wsname];
+        resolve(data);
+      };
 
-                const data = XLSX.utils.sheet_to_json(ws);
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
 
-                resolve(data);
-            };
+    promise.then((d) => {
+      setItems(d);
+    });
+  };
 
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-
-        promise.then((d) => {
-            setItems(d);
-        })
-
-    }
-
-    render() {
-        return (
-          <div className="App">
-            <Navbar dark color="primary">
-              <div className="container">
-                <NavbarBrand href="/">Testing Space</NavbarBrand>
-              </div>
-            </Navbar>
-            <div>
-              <input
-                type="file"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  this.readExcel(file);
-                }}
-              />
-            </div>
-            <Array />
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Model</th>
-                  <th scope="col">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((d) => (
-                  <tr key={d.Name}>
-                    <th>{d.Name}</th>
-                    <td>{d.Model}</td>
-                    <td>{d.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-    }
+  return (
+    <div className="App">
+      <Navbar dark color="primary">
+        <div className="container">
+          <NavbarBrand href="/">Testing Space</NavbarBrand>
+        </div>
+      </Navbar>
+      <div>
+        <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel(file);
+          }}
+        />
+      </div>
+      <Array />
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Model</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((d) => (
+            <tr key={d.Name}>
+              <th>{d.Name}</th>
+              <td>{d.Model}</td>
+              <td>{d.Description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default App;
