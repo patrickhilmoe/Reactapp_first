@@ -1,8 +1,8 @@
 export const DELIVERIES = [
     {
         id: 0,
-        ordernumber: 0011310001,
-        customernumber: 00001,
+        ordernumber: 11310001,
+        customernumber: 10001,
         customername: "Flack, Jackson",
         salesman: 301,
         modelnumber: "WRF550S0JW",
@@ -12,8 +12,8 @@ export const DELIVERIES = [
     },
     {
         id: 1,
-        ordernumber: 0011310002,
-        customernumber: 00002,
+        ordernumber: 11310002,
+        customernumber: 10002,
         customername: "JOHNSON, DWAYNE",
         salesman: 326,
         modelnumber: "WRB322DMBM",
@@ -23,8 +23,8 @@ export const DELIVERIES = [
     },
     {
         id: 2,
-        ordernumber: 0011310003,
-        customernumber: 00003,
+        ordernumber: 11310003,
+        customernumber: 10003,
         customername: "ADAMS, ANSEL",
         salesman: 312,
         modelnumber: "WDF505PADM",

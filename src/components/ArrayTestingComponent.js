@@ -10,7 +10,7 @@ class Array extends Component{
         console.log(this.testWords);
         return(
             <div>
-                Hello this is the Testign Component.
+                Hello this is the Testing Component.
             </div>
         );
     }
