@@ -70,7 +70,7 @@ function App() {
     var link = document.createElement("a");
     link.href = uri;
     // link.style = "visibility:hidden";
-    link.download = ("Hello" + ".csv");
+    link.download = ".csv";
     // link.text = 'Download';
     // console.log(link);
 
