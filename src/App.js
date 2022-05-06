@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Navbar, NavbarBrand } from 'reactstrap';
-import { DELIVERIES } from './shared/deliveryarray';
 import './App.css';
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
@@ -51,7 +50,7 @@ function App() {
       for (var i = 0; i < array.length; i++) {
         var line = "";
         for (var index in array[i]) {
-          if (line != "") line += ",";
+          if (line !== "") line += ","
 
           line += array[i][index];
         }
@@ -71,7 +70,7 @@ function App() {
     var link = document.createElement("a");
     link.href = uri;
     // link.style = "visibility:hidden";
-    link.download = "Hello" + ".csv";
+    link.download = ("Hello" + ".csv");
     // link.text = 'Download';
     // console.log(link);
 
