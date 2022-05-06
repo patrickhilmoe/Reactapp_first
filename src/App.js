@@ -115,7 +115,7 @@ function App() {
     <div className="App">
       <Navbar dark color="primary">
         <div className="container">
-          <NavbarBrand href="/">Testing Space</NavbarBrand>
+          <NavbarBrand href="/">Excel Processor</NavbarBrand>
         </div>
       </Navbar>
       <div>
