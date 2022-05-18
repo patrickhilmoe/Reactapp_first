@@ -100,15 +100,19 @@ function App() {
     for (let i = 0; i < items.length; i++) {
       let strings = items[i].notes;
       const phone_numbers = [...strings.matchAll(regexp)];
+      if(!Array.isArray(phone_numbers) || !phone_numbers.length) {
+        phone_numbers.push(["none"]);
+        console.log("testing if loop sensing empty arrays");
+      }
       allMatch.push(phone_numbers);
       for (const match of phone_numbers) {
         // console.log(match[0]);
         let number = match[0];
-        if(!Array.isArray(number) || !number.length) {
-          phone_numberAdd = [1];
-        } else {
+        // if(!Array.isArray(number) || !number.length) {
+        //   phone_numberAdd = [1];
+        // } else {
         phone_numberAdd = [number];
-        }
+        // }
         allMatch2.push(match);
       }
       // console.log(`this is phone number in scope ${phone_numberAdd}`);
