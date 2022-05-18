@@ -94,21 +94,31 @@ function App() {
     );
 
     let phone_numberAdd = [];
+    let allMatch = [];
+    let allMatch2 = [];
 
     for (let i = 0; i < items.length; i++) {
-      // console.log(DELIVERIES[i].notes);
       let strings = items[i].notes;
       const phone_numbers = [...strings.matchAll(regexp)];
+      allMatch.push(phone_numbers);
       for (const match of phone_numbers) {
         // console.log(match[0]);
         let number = match[0];
+        if(!Array.isArray(number) || !number.length) {
+          phone_numberAdd = [1];
+        } else {
         phone_numberAdd = [number];
+        }
+        allMatch2.push(match);
       }
-      console.log(`this is phone number in scope ${phone_numberAdd}`);
+      // console.log(`this is phone number in scope ${phone_numberAdd}`);
       items[i].newphone = phone_numberAdd;
     }
 
     console.log(items);
+    console.log(phone_numberAdd);
+    console.log(allMatch);
+    console.log(allMatch2);
   }
 
   return (
@@ -140,10 +150,10 @@ function App() {
         </thead>
         <tbody>
           {items.map((d) => (
-            <tr key={d.Name}>
-              <th>{d.Name}</th>
+            <tr key={d.name}>
+              <th>{d.name}</th>
               <td>{d.Model}</td>
-              <td>{d.Description}</td>
+              <td>{d.notes}</td>
             </tr>
           ))}
         </tbody>
