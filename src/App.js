@@ -38,7 +38,7 @@ function App() {
 
   };
 
-  // console.log(items);
+  console.log(items);
       // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
@@ -129,7 +129,7 @@ function App() {
     <div className="App">
       <Navbar dark color="primary">
         <div className="container">
-          <NavbarBrand href="/">Excel Processor</NavbarBrand>
+          <NavbarBrand href="/">Excel Processor Updated Version</NavbarBrand>
         </div>
       </Navbar>
       <div>
