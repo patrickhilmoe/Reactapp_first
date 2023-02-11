@@ -96,7 +96,7 @@ function App() {
 
 
   function convert() {
-    const CSV = ConvertToCSV(items);
+    const CSV = ConvertToCSV(items2);
     // $('#csv').append(ConvertToCSV(items));
     var uri = "data:text/csv;charset=utf-8," + escape(CSV);
 
@@ -112,8 +112,9 @@ function App() {
     // document.body.removeChild(link);
     $("a").append("Download");
   }
-
+  
   // ---------------------------------------------------------------------
+  // Phone number fuction
 
   function message() {
     console.log("click me button worked");
@@ -242,10 +243,8 @@ function ProcessArrays(array1, array2) {
       }
     });
   });
+  console.log(items2);
 }
-
-
-
 
   return (
     <div className="App">
