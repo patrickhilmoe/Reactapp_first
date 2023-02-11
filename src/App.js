@@ -6,6 +6,7 @@ import $ from 'jquery';
 
 function App() {
   const [items, setItems] = useState([]);
+  const [items2, setItems2] = useState([]);
 
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -35,10 +36,42 @@ function App() {
       setItems(d);
     });
 
+  };
+
+
+    const readExcel2 = (file) => {
+      const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+  
+        fileReader.onload = (e) => {
+          const bufferArray = e.target.result;
+  
+          const wb = XLSX.read(bufferArray, { type: "buffer" });
+  
+          const wsname = wb.SheetNames[0];
+  
+          const ws = wb.Sheets[wsname];
+  
+          const data = XLSX.utils.sheet_to_json(ws);
+  
+          resolve(data);
+        };
+  
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      });
+  
+      promise.then((d) => {
+        setItems2(d);
+      });
+
 
   };
 
-  console.log(items);
+  console.log("first array" + items);
+  console.log("second array" + items2)
       // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
@@ -125,6 +158,95 @@ function App() {
     console.log(allMatch2);
   }
 
+// -------------------------------------------
+// Invenotry Report
+
+function ExcelDateToJSDate(serial) {
+  var utc_days = Math.floor(serial - 25569);
+  var utc_value = utc_days * 86400;
+  var date_info = new Date(utc_value * 1000);
+
+  var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+  var total_seconds = Math.floor(86400 * fractional_day);
+
+  var seconds = total_seconds % 60;
+
+  total_seconds -= seconds;
+
+  var hours = Math.floor(total_seconds / (60 * 60));
+  var minutes = Math.floor(total_seconds / 60) % 60;
+
+  return new Date(
+    date_info.getFullYear(),
+    date_info.getMonth(),
+    date_info.getDate(),
+    hours,
+    minutes,
+    seconds
+  );
+}
+
+let mod = "";
+let da = "";
+let qty = "";
+//Return modelnumber with date and quantity in key/value pairs
+function modelDatePair(ModelwSN, purdate, TagList, Qty) {
+  let date = ExcelDateToJSDate(purdate);
+
+  if (ModelwSN === mod || mod === "") {
+    mod = ModelwSN;
+    qty = Qty;
+    if (Date.parse(da) > Date.parse(date) || da === "") {
+      da = date;
+    } else {
+      da = da;
+    }
+    // console.log(mod + " date is " + date);
+  } else if (ModelwSN !== mod) {
+    console.log(mod + " oldest date is " + da + " Quantity: " + qty);
+    for (let index in TagList) {
+      if (TagList[index].StockNumShipped == mod) {
+        TagList[index].oldest = da;
+        TagList[index].Quantity = qty;
+      } else {
+        console.log("not added");
+      }
+    }
+    // console.log(TagList);
+    // OldestArr.push(OldestObj);
+    mod = ModelwSN;
+    da = date;
+    qty = Qty;
+  } else {
+    console.log("nothing to show");
+  }
+  // console.log(da);
+  // console.log(mod);
+}
+
+function ProcessArrays(array1, array2) {
+  array2.forEach((y) => {
+    array1.forEach((x) => {
+      if (x.StockNumber === y.StockNumShipped) {
+        if (x.Location == y.LocationNumber) {
+          // let date = '';
+          // let oldestdate = "";
+          modelDatePair(
+            x.StockNumber,
+            x.PurchaseDate,
+            array2,
+            x.QuantityOnHand
+          );
+        }
+      }
+    });
+  });
+}
+
+
+
+
   return (
     <div className="App">
       <Navbar dark color="primary">
@@ -140,11 +262,18 @@ function App() {
             readExcel(file);
           }}
         />
+          <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel2(file);
+          }}
+        />
         <button onClick={message}>Click Me</button>
-        <button onClick={phoneNumberProc}>Excel Processor</button>
+        <button onClick={ProcessArrays(items, items2)}>Excel Processor</button>
         <button onClick={convert}>Convert to CSV</button>
       </div>
-      <table className="table">
+      {/* <table className="table">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -161,7 +290,7 @@ function App() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }
