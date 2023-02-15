@@ -194,6 +194,22 @@ let qty = "";
 //Return modelnumber with date and quantity in key/value pairs
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   let date = ExcelDateToJSDate(purdate);
+  const month = [
+    {
+      "JAN": 0,
+      "FEB": 1,
+      "MAR": 2,
+      "APR": 3,
+      "MAY": 4,
+      "JUNE": 5,
+      "JULY": 6,
+      "AUG": 7,
+      "SEPT": 8,
+      "OCT": 9,
+      "NOV": 10,
+      "DEC": 11
+    }
+  ];
 
   if (ModelwSN === mod || mod === "") {
     mod = ModelwSN;
@@ -208,7 +224,15 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
     console.log(mod + " oldest date is " + da + " Quantity: " + qty);
     for (let index in TagList) {
       if (TagList[index].StockNumShipped == mod) {
-        TagList[index].oldest = da;
+        let mo = da.getMonth();
+        for (let [key, value] of Object.entries(month[0])) {
+          if (mo == value ) {
+            TagList[index].oldest = key
+          } else {
+            console.log(key + "month not added");
+          }
+        }
+        // TagList[index].oldest = da;
         TagList[index].Quantity = qty;
       } else {
         console.log("not added");
