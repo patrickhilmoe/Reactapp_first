@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
+import { Nav, NavbarBrand } from 'bootstrap';
 import './App.css';
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
+import Second from './components/SecondComponent';
 
 function App() {
   const [items, setItems] = useState([]);
   const [items2, setItems2] = useState([]);
+
 
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -76,25 +78,39 @@ function App() {
 
     // JSON to CSV Converter
     const ConvertToCSV = function(objArray) {
-      var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
-      console.log(array[0]);
-      var str = "";
+      // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+      // console.log(array[0]);
+      // var str = "";
 
-      for (var i = 0; i < array.length; i++) {
-        var line = "";
-        for (var index in array[i]) {
-          if (line !== "") line += ","
+      // for (var i = 0; i < array.length; i++) {
+      //   var line = "";
+      //   for (var index in array[i]) {
+      //     if (line !== "") line += ","
 
-          line += array[i][index];
-        }
+      //     line += array[i][index];
+      //   }
 
-        str += line + "\r\n";
-      }
+      //   str += line + "\r\n";
+      // }
+      // console.log(str);
+      // return str;
 
-      return str;
+      var json = objArray
+      var fields = Object.keys(json[0])
+      var replacer = function(key, value) { return value === null ? '' : value } 
+      var csv = json.map(function(row){
+        return fields.map(function(fieldName){
+        return JSON.stringify(row[fieldName], replacer)
+        }).join(',')
+        })
+        csv.unshift(fields.join(',')) // add header column
+          csv = csv.join('\r\n');
+        console.log(csv)
+        return csv;
+
     }
 
-
+  // convert first report
   function convert() {
     const CSV = ConvertToCSV(items2);
     // $('#csv').append(ConvertToCSV(items));
@@ -112,6 +128,25 @@ function App() {
     // document.body.removeChild(link);
     $("a").append("Download");
   }
+
+    // convert second report
+    // function convert2() {
+    //   const CSV = ConvertToCSV(items4);
+    //   // $('#csv').append(ConvertToCSV(items));
+    //   var uri = "data:text/csv;charset=utf-8," + escape(CSV);
+  
+    //   var link = document.createElement("a");
+    //   link.href = uri;
+    //   // link.style = "visibility:hidden";
+    //   link.download = ".csv";
+    //   // link.text = 'Download';
+    //   // console.log(link);
+  
+    //   $("body").append(link);
+    //   // link.click();
+    //   // document.body.removeChild(link);
+    //   $("a").append("Download");
+    // }
   
   // ---------------------------------------------------------------------
   // Phone number fuction
@@ -120,44 +155,44 @@ function App() {
     console.log("click me button worked");
   }
 
-  function phoneNumberProc() {
-    // phone number RegEx
-    const regexp = new RegExp(
-      "\\+?\\(?\\d*\\)? ?\\(?\\d+\\)?\\d*([\\s./-]?\\d{2,})+",
-      "g"
-    );
+  // function phoneNumberProc() {
+  //   // phone number RegEx
+  //   const regexp = new RegExp(
+  //     "\\+?\\(?\\d*\\)? ?\\(?\\d+\\)?\\d*([\\s./-]?\\d{2,})+",
+  //     "g"
+  //   );
 
-    let phone_numberAdd = [];
-    let allMatch = [];
-    let allMatch2 = [];
+  //   let phone_numberAdd = [];
+  //   let allMatch = [];
+  //   let allMatch2 = [];
 
-    for (let i = 0; i < items.length; i++) {
-      let strings = items[i].notes;
-      const phone_numbers = [...strings.matchAll(regexp)];
-      if(!Array.isArray(phone_numbers) || !phone_numbers.length) {
-        phone_numbers.push(["none"]);
-        console.log("testing if loop sensing empty arrays");
-      }
-      allMatch.push(phone_numbers);
-      for (const match of phone_numbers) {
-        // console.log(match[0]);
-        let number = match[0];
-        // if(!Array.isArray(number) || !number.length) {
-        //   phone_numberAdd = [1];
-        // } else {
-        phone_numberAdd = [number];
-        // }
-        allMatch2.push(match);
-      }
-      // console.log(`this is phone number in scope ${phone_numberAdd}`);
-      items[i].newphone = phone_numberAdd;
-    }
+  //   for (let i = 0; i < items.length; i++) {
+  //     let strings = items[i].notes;
+  //     const phone_numbers = [...strings.matchAll(regexp)];
+  //     if(!Array.isArray(phone_numbers) || !phone_numbers.length) {
+  //       phone_numbers.push(["none"]);
+  //       console.log("testing if loop sensing empty arrays");
+  //     }
+  //     allMatch.push(phone_numbers);
+  //     for (const match of phone_numbers) {
+  //       // console.log(match[0]);
+  //       let number = match[0];
+  //       // if(!Array.isArray(number) || !number.length) {
+  //       //   phone_numberAdd = [1];
+  //       // } else {
+  //       phone_numberAdd = [number];
+  //       // }
+  //       allMatch2.push(match);
+  //     }
+  //     // console.log(`this is phone number in scope ${phone_numberAdd}`);
+  //     items[i].newphone = phone_numberAdd;
+  //   }
 
-    console.log(items);
-    console.log(phone_numberAdd);
-    console.log(allMatch);
-    console.log(allMatch2);
-  }
+  //   console.log(items);
+  //   console.log(phone_numberAdd);
+  //   console.log(allMatch);
+  //   console.log(allMatch2);
+  // }
 
 // -------------------------------------------
 // Invenotry Report
@@ -272,12 +307,17 @@ function ProcessArrays(array1, array2) {
 
   return (
     <div className="App">
-      <Navbar dark color="primary">
+      <nav className="navbar navcolor">
         <div className="container">
-          <NavbarBrand href="/">Excel Processor Updated Version</NavbarBrand>
+          <a className="navbar-brand" style={{color:'white'}} href="/">Excel Processor</a>
         </div>
-      </Navbar>
+      </nav>
       <div>
+        <div className="row">
+          <div className='col' style={{margin:'auto'}}>
+            <div style={{padding:"5px", margin:'auto'}}>
+              <strong>Timesavers Report</strong>
+            </div>
         <input
           type="file"
           onChange={(e) => {
@@ -285,6 +325,11 @@ function ProcessArrays(array1, array2) {
             readExcel(file);
           }}
         />
+        </div>
+        <div className='col'>
+          <div style={{padding:"5px", margin:'auto'}}>
+            <strong>The List</strong>
+          </div>
           <input
           type="file"
           onChange={(e) => {
@@ -292,10 +337,19 @@ function ProcessArrays(array1, array2) {
             readExcel2(file);
           }}
         />
-        <button onClick={message}>Click Me</button>
-        <button onClick={ProcessArrays(items, items2)}>Excel Processor</button>
-        <button onClick={convert}>Convert to CSV</button>
+        </div>
+        <div className="col-sm">
+        <button className="btn btn-success btn-outline-dark" onClick={message}>Click Me</button>
+        </div>
+        <div className="col-sm">
+        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays(items, items2)}>Excel Processor</button>
+        </div>
+        <div className="col-sm">
+        <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
+        </div>
+        </div>
       </div>
+      <Second/>
       {/* <table className="table">
         <thead>
           <tr>

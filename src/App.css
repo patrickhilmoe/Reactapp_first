@@ -28,6 +28,18 @@
   color: #61dafb;
 }
 
+.navcolor {
+  background-color: #0a4888;
+}
+
+.row {
+  padding: 5px;
+}
+
+.col {
+  margin-left: auto;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
