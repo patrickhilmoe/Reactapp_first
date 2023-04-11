@@ -72,7 +72,7 @@ function Second() {
      // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
-    const ConvertToCSV = function(objArray) {
+    const ConvertToCSV = function(items4) {
         // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
         // console.log(array[0]);
         // var str = "";
@@ -90,7 +90,7 @@ function Second() {
         // console.log(str);
         // return str;
   
-        var json = objArray
+        var json = items4
         var fields = Object.keys(json[0])
         var replacer = function(key, value) { return value === null ? '' : value } 
         var csv = json.map(function(row){
@@ -285,9 +285,12 @@ function phoneNumberProc(listarr2) {
 // ServiceTime(ListArr, ModelNumTime, starnum, StockWCat);
 
     return (
-        <div>
+        <div className= "container">
           <div className="row">
-            <div className='col' style={{margin:'auto'}}>
+            <div className='col-md'>
+                <div className='row'>
+                <div className='col'>
+            <div style={{margin:'auto'}}>
               <div style={{padding:"5px", margin:'auto'}}>
                 <strong>Delivery List</strong>
               </div>
@@ -299,7 +302,8 @@ function phoneNumberProc(listarr2) {
             }}
           />
           </div>
-          <div className='col'>
+            </div>
+                <div className='col'>
             <div style={{padding:"5px", margin:'auto'}}>
               <strong>Timesavers Report</strong>
             </div>
@@ -311,11 +315,18 @@ function phoneNumberProc(listarr2) {
             }}
           />
           </div>
-          <div className="col-sm">
+            </div>
+
+          </div>
+          <div className='col'>
+            <div className='row'>
+          <div className='col'>
           <button className="btn btn-success btn-outline-dark" onClick={ServiceTime(items3, timeArr, starNum, items4)}>Excel Processor</button>
           </div>
-          <div className="col-sm">
+          <div className='col'>
           <button className="btn btn-success btn-outline-dark" onClick={ConvertToCSV}>Convert to CSV</button>
+          </div>
+          </div>
           </div>
           </div>
         </div>

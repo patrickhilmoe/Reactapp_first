@@ -32,12 +32,13 @@
   background-color: #0a4888;
 }
 
-.row {
-  padding: 5px;
+.container {
+  margin: 50px, 0px;
 }
 
-.col {
-  margin-left: auto;
+.row {
+  margin: 30px;
+  padding: 5px;
 }
 
 @keyframes App-logo-spin {

@@ -308,11 +308,11 @@ function ProcessArrays(array1, array2) {
   return (
     <div className="App">
       <nav className="navbar navcolor">
-        <div className="container">
+        <div>
           <a className="navbar-brand" style={{color:'white'}} href="/">Excel Processor</a>
         </div>
       </nav>
-      <div>
+      <div className="container">
         <div className="row">
           <div className='col' style={{margin:'auto'}}>
             <div style={{padding:"5px", margin:'auto'}}>
