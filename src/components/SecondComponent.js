@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { starNum } from './starArr';
 import {timeArr} from './timeArr';
 import * as XLSX from 'xlsx';
+import $ from 'jquery';
 
 function Second() {
     const [items3, setItems3] = useState([]);
@@ -72,7 +73,7 @@ function Second() {
      // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
-    const ConvertToCSV = function(items4) {
+    const ConvertToCSV = function(objArray) {
         // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
         // console.log(array[0]);
         // var str = "";
@@ -90,7 +91,7 @@ function Second() {
         // console.log(str);
         // return str;
   
-        var json = items4
+        var json = objArray
         var fields = Object.keys(json[0])
         var replacer = function(key, value) { return value === null ? '' : value } 
         var csv = json.map(function(row){
@@ -105,9 +106,35 @@ function Second() {
   
       }
 
+        // convert first report
+  function convert() {
+    const CSV = ConvertToCSV(items3);
+    // $('#csv').append(ConvertToCSV(items));
+    var uri = "data:text/csv;charset=utf-8," + escape(CSV);
+
+    var link = document.createElement("a");
+    link.href = uri;
+    // link.style = "visibility:hidden";
+    link.download = ".csv";
+    // link.text = 'Download';
+    // console.log(link);
+
+    $("body").append(link);
+    // link.click();
+    // document.body.removeChild(link);
+    $("a").append("Download");
+  }
+
     // -----------------------------------------
 // List processor
 
+function ExecuteServiceTime() {
+    ServiceTime(items3, timeArr, starNum, items4);
+}
+
+let MapArr = [];
+
+let largestNum = 0;
 let arr = [];
 let arr2 = [];
 let ord = "";
@@ -115,41 +142,181 @@ let bigarr = [];
 let bigarray = [];
 function ServiceTime(listarr, timearr, stararr, catarr) {
     ConcatNotes(listarr);
+    listarr.forEach((x) => {
+        (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
+    })
+    console.log('the largest number is:')
+    // MapArr = listarr.map((x) => {
   listarr.forEach((x) => {
+    x.ServiceTime = "";
     catarr.forEach((cat) => {
       if (x.StockShipped === cat.Model) {
         x.Category = cat.ProductCategory;
       }
     });
+    // console.log(`order name is ${x.CustomerName} and order number ${x.StockShipped}`)
+    // console.log(`row num of ${x.CustomerName} is ${x.__rowNum__}`);
     if (ord == x.OrderNumber || ord == "") {
       ord = x.OrderNumber;
       arr.push(x);
+      
     } else {
-      // console.log(arr);
+    //   console.log(arr);
       // below is for finding service times matching with product category
       // if array has hookup charge, find object with a product category and add the service time. Then delete the hookup charge object. -- then what... loop again until no more hook up charges, then start again with creating new array object for new customer.
+      
+      InstallItems(arr);
+
       arr.forEach((ar) => {
+
         stararr.forEach((star) => {
           if (ar.StockShipped === star.StockShipped) {
+
             arr.forEach((ar2) => {
-              timearr.forEach((time) => {
-                if (ar2.Category === time.ProductCategory) {
-                  ar2.ServiceTime = time.TIME;
-                  arr2.push(ar2);
+                console.log(ar.StockShipped);
+                // if star item matches appliance category apply service time
+                if ("*CORD") {
+                    if (ar2.Category == "RAN" && !ar2.ServiceTime) {
+                        console.log(`order name is ${x.CustomerName} and order number ${x.OrderNumber}`)
+                        ar2.ServiceTime = 30
+                    }
+                    if (ar2.Category == "DRY" && !ar2.ServiceTime) {
+                        console.log(`order name is ${x.CustomerName} and order number ${x.OrderNumber}`)
+                        ar2.ServiceTime = 30
+                    }
                 }
-              });
+                if (ar2.StockShipped === "*DRYERKIT") {
+                    if (ar2.Category === "DRY" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 30
+                    }
+                }
+                if ("*GASHOOKUP") {
+                    if (ar2.Category === "DRY" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 45
+                    }
+                    if (ar2.Category === "RAN" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 45
+                    }
+                }
+                if ("*HOOKUPREFRIG1") {
+                    if (ar2.Category === "REF" && !ar2.ServiceTime) {
+                        console.log("its working!!")
+                        ar2.ServiceTime = 60
+                    }
+                }
+                if ("*HOOKUPREFRIG2") {
+                    if (ar2.Category === "REF" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 60
+                    }
+                }
+                if ("HOSE-REGULAR") {
+                    if (ar2.Category === "WAS" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 30
+                    }
+                }
+                if ("HOSE-STAINLESS") {
+                    if (ar2.Category === "WAS" && !ar2.ServiceTime) {
+                        ar2.ServiceTime = 30
+                    }
+                }
+
             });
           }
         });
       });
+
+      console.log(arr);
+      arr2.push(arr);
       // console.log(arr2);
       bigarray = bigarr.concat(arr2);
 
       ord = x.OrderNumber;
       arr = [];
+      arr.push(x);
+      console.log('x pushed to arr:')
+      console.log(x);
     }
+    if (x.__rowNum__ == largestNum) {
+        console.log('final order is:');
+        console.log(arr);      
+        
+        InstallItems(arr);
+
+        arr.forEach((ar) => {
+  
+          stararr.forEach((star) => {
+            if (ar.StockShipped === star.StockShipped) {
+  
+              arr.forEach((ar2) => {
+                  console.log(ar.StockShipped);
+                  // if star item matches appliance category apply service time
+                  if ("*CORD") {
+                      if (ar2.Category == "RAN" && !ar2.ServiceTime) {
+                          console.log(`order name is ${x.CustomerName} and order number ${x.OrderNumber}`)
+                          ar2.ServiceTime = 30
+                      }
+                      if (ar2.Category == "DRY" && !ar2.ServiceTime) {
+                          console.log(`order name is ${x.CustomerName} and order number ${x.OrderNumber}`)
+                          ar2.ServiceTime = 30
+                      }
+                  }
+                  if (ar2.StockShipped === "*DRYERKIT") {
+                      if (ar2.Category === "DRY" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 30
+                      }
+                  }
+                  if ("*GASHOOKUP") {
+                      if (ar2.Category === "DRY" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 45
+                      }
+                      if (ar2.Category === "RAN" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 45
+                      }
+                  }
+                  if ("*HOOKUPREFRIG1") {
+                      if (ar2.Category === "REF" && !ar2.ServiceTime) {
+                          console.log("its working!!")
+                          ar2.ServiceTime = 60
+                      }
+                  }
+                  if ("*HOOKUPREFRIG2") {
+                      if (ar2.Category === "REF" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 60
+                      }
+                  }
+                  if ("HOSE-REGULAR") {
+                      if (ar2.Category === "WAS" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 30
+                      }
+                  }
+                  if ("HOSE-STAINLESS") {
+                      if (ar2.Category === "WAS" && !ar2.ServiceTime) {
+                          ar2.ServiceTime = 30
+                      }
+                  }
+  
+              });
+            }
+          });
+        });
+  
+        console.log(arr);
+        arr2.push(arr);
+        // console.log(arr2);
+        bigarray = bigarr.concat(arr2);
+  
+        ord = x.OrderNumber;
+        arr = [];
+        arr.push(x);
+        console.log('x pushed to arr:')
+        console.log(x);
+        
+      }
   });
+  console.log('bigarray is:');
   console.log(bigarray);
+  console.log('items3 is:');
+  console.log(items3);
 }
 
 // CONCATINATING NOTES
@@ -235,10 +402,10 @@ function ConcatNotes(listarr) {
     } else {
     //   console.log("no more header");
     }
-    // console.log(`the notes are ${notes}`);
+
     list.Notes = notes;
   });
-  phoneNumberProc(listarr);
+//   phoneNumberProc(listarr);
 }
 
 function phoneNumberProc(listarr2) {
@@ -255,13 +422,16 @@ function phoneNumberProc(listarr2) {
   for (let i = 0; i < listarr2.length; i++) {
     let strings = listarr2[i].Notes;
     const phone_numbers = [...strings.matchAll(regexp)];
+    let OGphone_number = "";
     if (!Array.isArray(phone_numbers) || !phone_numbers.length) {
-      phone_numbers.push(["none"]);
-      console.log("testing if loop sensing empty arrays");
+      OGphone_number = listarr2[i].PhoneNumber;
+    //   console.log('add this number if the notes do not have a number');
+    //   console.log(OGphone_number);
     }
-    allMatch.push(phone_numbers);
+    allMatch2.push(OGphone_number);
     for (const match of phone_numbers) {
-      // console.log(match[0]);
+    //     console.log(match);
+    //   console.log(match[0]);
       let number = match[0];
       // if(!Array.isArray(number) || !number.length) {
       //   phone_numberAdd = [1];
@@ -269,9 +439,16 @@ function phoneNumberProc(listarr2) {
       // phone_numberAdd = [number];
       // }
       allMatch2.push(number);
+      
     }
     // console.log(`this is phone number in scope ${phone_numberAdd}`);
-    listarr2[i].PhoneNumber = allMatch2[0];
+    // console.log('allMatch to add to list')
+    // console.log(allMatch2);
+    if ((allMatch2[0] === "")) {
+    listarr2[i].PhoneNumber = allMatch2[1];
+    } else {
+        listarr2[i].PhoneNumber = allMatch2[0];
+    }
     allMatch2 = [];
   }
 
@@ -281,8 +458,26 @@ function phoneNumberProc(listarr2) {
   // console.log(allMatch2);
 }
 
-// ConcatNotes(pracarr);
-// ServiceTime(ListArr, ModelNumTime, starnum, StockWCat);
+let installarrsm = [];
+let installarrlg = [];
+function InstallItems(arr) {
+    arr.forEach((x) => {
+        if (x.StockShipped === "*INSTALLDISH") {
+            console.log('pushing value to install array');
+            console.log(x);
+            installarrsm.push(x);
+            arr.forEach((ar) => {
+                if (ar.Category == "DIS") {
+                    installarrsm.push(ar);
+                }
+            })
+            installarrlg.push(installarrsm);
+            installarrsm = [];
+        }
+    })
+    console.log('install array is:');
+    console.log(installarrlg);
+}
 
     return (
         <div className= "container">
@@ -321,10 +516,10 @@ function phoneNumberProc(listarr2) {
           <div className='col'>
             <div className='row'>
           <div className='col'>
-          <button className="btn btn-success btn-outline-dark" onClick={ServiceTime(items3, timeArr, starNum, items4)}>Excel Processor</button>
+          <button className="btn btn-success btn-outline-dark" onClick={ExecuteServiceTime}>Excel Processor</button>
           </div>
           <div className='col'>
-          <button className="btn btn-success btn-outline-dark" onClick={ConvertToCSV}>Convert to CSV</button>
+          <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
           </div>
           </div>
           </div>

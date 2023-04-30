@@ -153,6 +153,7 @@ function App() {
 
   function message() {
     console.log("click me button worked");
+    console.log(items2);
   }
 
   // function phoneNumberProc() {
@@ -229,6 +230,7 @@ let qty = "";
 //Return modelnumber with date and quantity in key/value pairs
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   let date = ExcelDateToJSDate(purdate);
+  console.log('converted date');
   const month = [
     {
       "JAN": 0,
@@ -285,13 +287,19 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   // console.log(mod);
 }
 
-function ProcessArrays(array1, array2) {
+function ProcessArrays() {
+  const array1 = items
+  const array2 = items2
+  console.log('excel processor button is working');
   array2.forEach((y) => {
     array1.forEach((x) => {
+          console.log('is this working?')
       if (x.StockNumber === y.StockNumShipped) {
+        console.log('now this...')
         if (x.Location == y.LocationNumber) {
           // let date = '';
           // let oldestdate = "";
+          console.log('just stored by model and location')
           modelDatePair(
             x.StockNumber,
             x.PurchaseDate,
@@ -302,7 +310,6 @@ function ProcessArrays(array1, array2) {
       }
     });
   });
-  console.log(items2);
 }
 
   return (
@@ -342,7 +349,7 @@ function ProcessArrays(array1, array2) {
         <button className="btn btn-success btn-outline-dark" onClick={message}>Click Me</button>
         </div>
         <div className="col-sm">
-        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays(items, items2)}>Excel Processor</button>
+        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
         </div>
         <div className="col-sm">
         <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
