@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { starNum } from './starArr';
 import {timeArr} from './timeArr';
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
+import { render } from '@testing-library/react';
+
+// A process for applying service times to appliances (for upload to delivery dispatching application )
 
 function Second() {
     const [items3, setItems3] = useState([]);
@@ -126,13 +129,11 @@ function Second() {
   }
 
     // -----------------------------------------
-// List processor
+// List processor for service times
 
 function ExecuteServiceTime() {
     ServiceTime(items3, timeArr, starNum, items4);
 }
-
-let MapArr = [];
 
 let largestNum = 0;
 let arr = [];
@@ -142,30 +143,30 @@ let bigarr = [];
 let bigarray = [];
 function ServiceTime(listarr, timearr, stararr, catarr) {
     ConcatNotes(listarr);
+    // creating a catch for the last order
     listarr.forEach((x) => {
         (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
     })
-    console.log('the largest number is:')
-    // MapArr = listarr.map((x) => {
+    console.log('the largest number is:')  
   listarr.forEach((x) => {
     x.ServiceTime = "";
+    //adding product category to main list
     catarr.forEach((cat) => {
       if (x.StockShipped === cat.Model) {
         x.Category = cat.ProductCategory;
       }
     });
-    // console.log(`order name is ${x.CustomerName} and order number ${x.StockShipped}`)
-    // console.log(`row num of ${x.CustomerName} is ${x.__rowNum__}`);
+    //create array based on order number
     if (ord == x.OrderNumber || ord == "") {
       ord = x.OrderNumber;
       arr.push(x);
       
     } else {
     //   console.log(arr);
-      // below is for finding service times matching with product category
-      // if array has hookup charge, find object with a product category and add the service time. Then delete the hookup charge object. -- then what... loop again until no more hook up charges, then start again with creating new array object for new customer.
+      // below is for finding service times matching with product category for every customer's order
+      // if array has hookup charge, find object with a product category and add the service time. Then delete the hookup charge object. -- then loop again until no more hook up charges, then start again with creating new array object for new customer.
       
-      InstallItems(arr);
+      // InstallItems(arr);
 
       arr.forEach((ar) => {
 
@@ -236,11 +237,12 @@ function ServiceTime(listarr, timearr, stararr, catarr) {
       console.log('x pushed to arr:')
       console.log(x);
     }
+    //catching the last order in the array
     if (x.__rowNum__ == largestNum) {
         console.log('final order is:');
-        console.log(arr);      
+        // console.log(arr);      
         
-        InstallItems(arr);
+        // InstallItems(arr);
 
         arr.forEach((ar) => {
   
@@ -317,6 +319,13 @@ function ServiceTime(listarr, timearr, stararr, catarr) {
   console.log(bigarray);
   console.log('items3 is:');
   console.log(items3);
+
+  const numbers = [1,2,3,4,5];
+  let listItems = numbers.map((number) => 
+  <li key={number.toString()}>
+      {number}
+  </li>
+  )
 }
 
 // CONCATINATING NOTES
@@ -408,6 +417,8 @@ function ConcatNotes(listarr) {
 //   phoneNumberProc(listarr);
 }
 
+//function for finding phone number in delivery notes and adding it to phone numbers key value  WIP
+
 function phoneNumberProc(listarr2) {
   // phone number RegEx
   const regexp = new RegExp(
@@ -452,36 +463,87 @@ function phoneNumberProc(listarr2) {
     allMatch2 = [];
   }
 
-//   console.log(listarr2);
-  // console.log(phone_numberAdd);
-  // console.log(allMatch);
-  // console.log(allMatch2);
 }
 
-let installarrsm = [];
-let installarrlg = [];
-function InstallItems(arr) {
-    arr.forEach((x) => {
-        if (x.StockShipped === "*INSTALLDISH") {
-            console.log('pushing value to install array');
-            console.log(x);
-            installarrsm.push(x);
-            arr.forEach((ar) => {
-                if (ar.Category == "DIS") {
-                    installarrsm.push(ar);
-                }
-            })
-            installarrlg.push(installarrsm);
-            installarrsm = [];
-        }
-    })
-    console.log('install array is:');
-    console.log(installarrlg);
-}
+//Install Dept  WIP
+
+// function ExecuteInstallItems() {
+//   InstallItems(items3);
+// }
+
+// let installarrsm = [];
+// let installarrlg = [];
+// let installordnum = [];
+// function InstallItems(arr) {
+//     arr.forEach((x) => {
+//         if (x.StockShipped === "*INSTALLDISH") {
+//             console.log('pushing value to install array');
+//             console.log(x);
+//             installordnum = x.OrderNumber;
+//             console.log(installordnum);
+//             installarrsm.push(x);
+//             arr.forEach((ar) => {
+//                 if (ar.Category == "DIS" && ar.OrderNumber === installordnum) {
+//                     installarrsm.push(ar);
+//                 }
+//             })
+//             installarrlg.push(installarrsm);
+//             installarrsm = [];
+//             installordnum = [];
+//         }
+//     })
+//     console.log('install array is:');
+//     console.log(installarrlg);
+// }
+
+// Listing flagged install dept lines
+
+    // useEffect(() => {
+
+    //       // const numbers = [1,2,3,4,5];
+    //     function myFunction() {
+        
+    //     const list = document.getElementById("demo");
+    //     let numHolder = 0;
+    //     installarrlg.map((inst) =>
+    //     list.innerHTML +=
+    //     `<p>
+    //     <li key={inst.toString() id=num${numHolder}}>
+    //         Stock Num: ${inst[0].StockShipped} & Cust Info ${inst[0].CustomerName}
+    //     </li>
+    //     <button>Keep</button>
+    //     <button>Delete</button>
+    //     </p>`,
+    //     numHolder += 1,
+    //     console.log(numHolder)
+    //     );
+    //     }
+
+    //     const element = document.getElementById("myBtn");    
+    //     element.addEventListener("click", myFunction);
+    //     return () => {
+    //         element.removeEventListener("click", myFunction);
+    //     };
+    // });
+
+  // Deleting install dept lines that are not needed
+
+    // function deleteInstall(){
+    //   console.log("its working");
+    // };
+
+    // useEffect(() => {
+    //   const elements = document.getElementsByTagName("button");
+    //   elements.addEventListener("click", deleteInstall);
+    //   return () => {
+    //     elements.removeEventListener("click", deleteInstall);
+    //   };
+    // }, [deleteInstall]);
+    
 
     return (
         <div className= "container">
-          <div className="row">
+          <div className="row"> 
             <div className='col-md'>
                 <div className='row'>
                 <div className='col'>
@@ -521,9 +583,21 @@ function InstallItems(arr) {
           <div className='col'>
           <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
           </div>
+          {/* <div>
+            <button className="btn btn-success btn-outline-dark" onClick={(ExecuteInstallItems)}>update install object</button>
+          </div>
+          <div>
+            <button className="btn btn-success btn-outline-dark" id="myBtn">add install to page</button>
+          </div> */}
           </div>
           </div>
           </div>
+
+        {/* <ul id="demo">
+            <li><strong>install items</strong></li>
+        </ul> */}
+        {/* <p id="demo"/> */}
+
         </div>
     )
 }

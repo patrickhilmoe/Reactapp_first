@@ -5,9 +5,12 @@ import * as XLSX from 'xlsx';
 import $ from 'jquery';
 import Second from './components/SecondComponent';
 
+// A process for finding oldest month and qty in stock
+
 function App() {
   const [items, setItems] = useState([]);
   const [items2, setItems2] = useState([]);
+  const [items3, setItems3] = useState([]);
 
 
   const readExcel = (file) => {
@@ -72,8 +75,37 @@ function App() {
 
   };
 
-  console.log("first array" + items);
-  console.log("second array" + items2)
+  const readExcel3 = (file) => {
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
+
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
+
+        const wsname = wb.SheetNames[0];
+
+        const ws = wb.Sheets[wsname];
+
+        const data = XLSX.utils.sheet_to_json(ws);
+
+        resolve(data);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+
+    promise.then((d) => {
+      setItems3(d);
+    });
+
+
+};
+
       // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
@@ -198,6 +230,52 @@ function App() {
 // -------------------------------------------
 // Invenotry Report
 
+// if stock column is null fill with stock from stock report -- insert into the function after the stock column is created
+function AddStock(listarray, stockarray) {
+  listarray.forEach(arr => {
+    if(!arr.Quantity) {
+      stockarray.forEach(stock => {
+        if(stock.StockNumber === arr.StockShipped && stock.Loc === arr.LocationNumber) {
+          arr.Quantity = stock.QuantityOnHand;
+        }
+      })
+    }
+  })
+}
+
+// delete un-needed columns
+function DeleteCol(listarray) {
+  listarray.forEach(arr => {
+    delete arr.PhoneNumber;
+    delete arr.EmailAddress;
+    delete arr.ShiptoFmtAddr1;
+    delete arr.ShiptoFmtAddr2;
+    delete arr.ShiptoFmtAddr3;
+    delete arr.ShiptoFmtAddr4;
+    delete arr.ShiptoCity;
+    delete arr.ShiptoState;
+    delete arr.ShiptoZipCode;
+    delete arr.HeaderText1;
+    delete arr.HeaderText2;
+    delete arr.HeaderText3;
+    delete arr.HeaderText4;
+    delete arr.HeaderText5;
+    delete arr.HeaderText6;
+    delete arr.HeaderText7;
+    delete arr.HeaderText8;
+    delete arr.HeaderText9;
+    delete arr.HeaderText10;
+    delete arr.HeaderText11;
+    delete arr.HeaderText12;
+    delete arr.HeaderText13;
+    delete arr.HeaderText14;
+    delete arr.HeaderText15;
+  })
+  console.log('first items with deleted stuff is: ')
+  console.log(listarray[0]);
+}
+
+//changing date from excel to js compatable date
 function ExcelDateToJSDate(serial) {
   var utc_days = Math.floor(serial - 25569);
   var utc_value = utc_days * 86400;
@@ -229,8 +307,8 @@ let da = "";
 let qty = "";
 //Return modelnumber with date and quantity in key/value pairs
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
+console.log('the largest number is:')
   let date = ExcelDateToJSDate(purdate);
-  console.log('converted date');
   const month = [
     {
       "JAN": 0,
@@ -256,11 +334,10 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
     } else {
       da = da;
     }
-    // console.log(mod + " date is " + date);
   } else if (ModelwSN !== mod) {
-    console.log(mod + " oldest date is " + da + " Quantity: " + qty);
+    // console.log(mod + " oldest date is " + da + " Quantity: " + qty);
     for (let index in TagList) {
-      if (TagList[index].StockNumShipped == mod) {
+      if (TagList[index].StockShipped == mod) {
         let mo = da.getMonth();
         for (let [key, value] of Object.entries(month[0])) {
           if (mo == value ) {
@@ -283,23 +360,22 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   } else {
     console.log("nothing to show");
   }
-  // console.log(da);
-  // console.log(mod);
 }
 
 function ProcessArrays() {
   const array1 = items
   const array2 = items2
-  console.log('excel processor button is working');
+  const array3 = items3
+  DeleteCol(array2);
+  console.log('arrays have been assigned')
   array2.forEach((y) => {
     array1.forEach((x) => {
-          console.log('is this working?')
-      if (x.StockNumber === y.StockNumShipped) {
-        console.log('now this...')
+      if (x.StockNumber === y.StockShipped) {
         if (x.Location == y.LocationNumber) {
+          console.log('second if statement')
           // let date = '';
           // let oldestdate = "";
-          console.log('just stored by model and location')
+          // console.log('just stored by model and location')
           modelDatePair(
             x.StockNumber,
             x.PurchaseDate,
@@ -310,6 +386,8 @@ function ProcessArrays() {
       }
     });
   });
+  AddStock(array2, array3)
+  console.log(items2);
 }
 
   return (
@@ -320,11 +398,12 @@ function ProcessArrays() {
         </div>
       </nav>
       <div className="container">
-        <div className="row">
-          <div className='col' style={{margin:'auto'}}>
             <div style={{padding:"5px", margin:'auto'}}>
-              <strong>Timesavers Report</strong>
-            </div>
+              <strong>Timesavers Report - Serialized</strong>
+            </div>       
+        <div className="row">
+          <div className='col'>
+          <div className='col' style={{margin:'auto'}}>
         <input
           type="file"
           onChange={(e) => {
@@ -345,16 +424,36 @@ function ProcessArrays() {
           }}
         />
         </div>
-        <div className="col-sm">
+        <div className='col'>
+          <div style={{padding:"5px", margin:'auto'}}>
+            <strong>TS-Stock Report</strong>
+          </div>
+          <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel3(file);
+          }}
+        />
+        </div>
+        </div>
+        <div className='col'>
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={message}>Click Me</button>
         </div>
-        <div className="col-sm">
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
         </div>
-        <div className="col-sm">
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
         </div>
         </div>
+        </div>
+      </div>
+      <div>
+        <p>
+          -----------------------------------------------------------------------------------
+        </p>
       </div>
       <Second/>
       {/* <table className="table">
