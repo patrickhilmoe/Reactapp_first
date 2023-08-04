@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { Nav, NavbarBrand } from 'bootstrap';
+import { Nav, NavbarBrand } from 'reactstrap';
 import './App.css';
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
 import Second from './components/SecondComponent';
 
-// A process for finding oldest month and qty in stock
+// Process for finding oldest month and qty in stock
 
 function App() {
-  const [items, setItems] = useState([]);
-  const [items2, setItems2] = useState([]);
-  const [items3, setItems3] = useState([]);
-
+  const [serialStock, setSerialStock] = useState([]);
+  const [delList, setDelList] = useState([]);
+  const [tsStock, setTsStock] = useState([]);
+  const [conList, setConList] = useState([]);
 
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ function App() {
     });
 
     promise.then((d) => {
-      setItems(d);
+      setSerialStock(d);
     });
 
   };
@@ -69,7 +69,7 @@ function App() {
       });
   
       promise.then((d) => {
-        setItems2(d);
+        setDelList(d);
       });
 
 
@@ -100,9 +100,37 @@ function App() {
     });
 
     promise.then((d) => {
-      setItems3(d);
+      setTsStock(d);
     });
+  };
 
+    const readExcel4 = (file) => {
+      const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+  
+        fileReader.onload = (e) => {
+          const bufferArray = e.target.result;
+  
+          const wb = XLSX.read(bufferArray, { type: "buffer" });
+  
+          const wsname = wb.SheetNames[0];
+  
+          const ws = wb.Sheets[wsname];
+  
+          const data = XLSX.utils.sheet_to_json(ws);
+  
+          resolve(data);
+        };
+  
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      });
+  
+      promise.then((d) => {
+        setConList(d);
+      });
 
 };
 
@@ -144,8 +172,8 @@ function App() {
 
   // convert first report
   function convert() {
-    const CSV = ConvertToCSV(items2);
-    // $('#csv').append(ConvertToCSV(items));
+    const CSV = ConvertToCSV(delList);
+    // $('#csv').append(ConvertToCSV(serialStock));
     var uri = "data:text/csv;charset=utf-8," + escape(CSV);
 
     var link = document.createElement("a");
@@ -164,7 +192,7 @@ function App() {
     // convert second report
     // function convert2() {
     //   const CSV = ConvertToCSV(items4);
-    //   // $('#csv').append(ConvertToCSV(items));
+    //   // $('#csv').append(ConvertToCSV(serialStock));
     //   var uri = "data:text/csv;charset=utf-8," + escape(CSV);
   
     //   var link = document.createElement("a");
@@ -185,7 +213,7 @@ function App() {
 
   function message() {
     console.log("click me button worked");
-    console.log(items2);
+    console.log(delList);
   }
 
   // function phoneNumberProc() {
@@ -230,14 +258,23 @@ function App() {
 // -------------------------------------------
 // Invenotry Report
 
+// STILL DEBUGGING. IT IS NOT ADDING STOCK TO BED MODEL NUMBERS
 // if stock column is null fill with stock from stock report -- insert into the function after the stock column is created
 function AddStock(listarray, stockarray) {
   listarray.forEach(arr => {
     if(!arr.Quantity) {
+      // console.log(`the model without serialized stock is ${arr.StockShipped}`);
       stockarray.forEach(stock => {
         if(stock.StockNumber === arr.StockShipped && stock.Loc === arr.LocationNumber) {
+          // console.log(`stock report quantity for ${stock.StockNumber} is ${stock.QuantityOnHand} and location. stock: ${stock.Loc} list: ${arr.LocationNumber}`)
           arr.Quantity = stock.QuantityOnHand;
         }
+        // if(stock.StockNumber === arr.StockShipped) {
+        //   console.log(`returning bed value? : ${arr.StockShipped}`)
+        //   // console.log(`returning bed location? list : ${arr.LocationNumber}`)
+        //   // console.log(`returning bed location? stock: ${arr.Loc}`)
+
+        // }
       })
     }
   })
@@ -247,7 +284,7 @@ function AddStock(listarray, stockarray) {
 function DeleteCol(listarray) {
   listarray.forEach(arr => {
     delete arr.PhoneNumber;
-    delete arr.EmailAddress;
+    delete arr.EMailAddress;
     delete arr.ShiptoFmtAddr1;
     delete arr.ShiptoFmtAddr2;
     delete arr.ShiptoFmtAddr3;
@@ -271,8 +308,6 @@ function DeleteCol(listarray) {
     delete arr.HeaderText14;
     delete arr.HeaderText15;
   })
-  console.log('first items with deleted stuff is: ')
-  console.log(listarray[0]);
 }
 
 //changing date from excel to js compatable date
@@ -307,7 +342,6 @@ let da = "";
 let qty = "";
 //Return modelnumber with date and quantity in key/value pairs
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
-console.log('the largest number is:')
   let date = ExcelDateToJSDate(purdate);
   const month = [
     {
@@ -325,7 +359,8 @@ console.log('the largest number is:')
       "DEC": 11
     }
   ];
-
+  // this if statement cycles through model numbers from the Serialized Stock array using the date when items were added to inventory.
+  // it exits the if statement when it reaches a new model number (how to capture the last item?)
   if (ModelwSN === mod || mod === "") {
     mod = ModelwSN;
     qty = Qty;
@@ -335,7 +370,6 @@ console.log('the largest number is:')
       da = da;
     }
   } else if (ModelwSN !== mod) {
-    // console.log(mod + " oldest date is " + da + " Quantity: " + qty);
     for (let index in TagList) {
       if (TagList[index].StockShipped == mod) {
         let mo = da.getMonth();
@@ -352,8 +386,6 @@ console.log('the largest number is:')
         console.log("not added");
       }
     }
-    // console.log(TagList);
-    // OldestArr.push(OldestObj);
     mod = ModelwSN;
     da = date;
     qty = Qty;
@@ -362,20 +394,51 @@ console.log('the largest number is:')
   }
 }
 
+function TagLocation(array2, array3, array4) {
+  // const array2 = delList;
+  // const array3 = tsStock;
+  // const array4 = conList;
+  // DeleteCol(array2);
+  array2.forEach((y) => {
+    array4.forEach((x) => {
+      if(y.StockShipped === x.Model) {
+        console.log(`${y.StockShipped} is in container ${x.Loc}`);
+        return y.Row = x.Loc
+      }
+      if(y.LocationNumber == 200) {
+        return y.Row = "FLOOR"
+      }
+
+    })
+  })
+  array2.forEach((y) => {
+    array3.forEach((x) => {
+      if(!y.Row) {
+        if (y.StockShipped === x.StockNumber) {
+          return x.ProductCategory === 'REF' ? y.Row = '8 or 9' 
+          : x.ProductCategory === 'DRY' ? y.Row = '5'
+          : x.ProductCategory === 'WAS' ? y.Row = '4'
+          : x.ProductCategory === 'RAN' ? y.Row = '7'
+          :'other';
+        }
+      }
+    })
+  })
+  // console.table(array2);
+}
+
 function ProcessArrays() {
-  const array1 = items
-  const array2 = items2
-  const array3 = items3
+  const array1 = serialStock
+  const array2 = delList
+  const array3 = tsStock
+  const array4 = conList
   DeleteCol(array2);
-  console.log('arrays have been assigned')
   array2.forEach((y) => {
     array1.forEach((x) => {
+      // for each individual line in the Serialized Stock Array the Delivery list array cycles through
+      // these two 'if' statements move forward when the model number and location in the Serialized Stock Array matches the Delivery list array
       if (x.StockNumber === y.StockShipped) {
         if (x.Location == y.LocationNumber) {
-          console.log('second if statement')
-          // let date = '';
-          // let oldestdate = "";
-          // console.log('just stored by model and location')
           modelDatePair(
             x.StockNumber,
             x.PurchaseDate,
@@ -387,31 +450,29 @@ function ProcessArrays() {
     });
   });
   AddStock(array2, array3)
-  console.log(items2);
+  TagLocation(array2, array3, array4);
+  console.table(delList);
 }
 
   return (
     <div className="App">
-      <nav className="navbar navcolor">
-        <div>
-          <a className="navbar-brand" style={{color:'white'}} href="/">Excel Processor</a>
+      <Nav className="navbar navcolor">
+        <div class="container-fluid">
+          <div>
+            <a className="navbar-brand" style={{color:'white'}} href="/">Excel Processor</a>
+          </div>
+          <div>
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <a class="nav-link active" href="#">Home</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </nav>
-      <div className="container">
-            <div style={{padding:"5px", margin:'auto'}}>
-              <strong>Timesavers Report - Serialized</strong>
-            </div>       
+      </Nav>
+      <div className="container">     
         <div className="row">
           <div className='col'>
-          <div className='col' style={{margin:'auto'}}>
-        <input
-          type="file"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            readExcel(file);
-          }}
-        />
-        </div>
         <div className='col'>
           <div style={{padding:"5px", margin:'auto'}}>
             <strong>The List</strong>
@@ -421,6 +482,16 @@ function ProcessArrays() {
           onChange={(e) => {
             const file = e.target.files[0];
             readExcel2(file);
+          }}
+        />
+        </div>
+          <div className='col' style={{padding:"5px", margin:'auto'}}>
+          <strong>Timesavers Report - Serialized</strong>
+        <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel(file);
           }}
         />
         </div>
@@ -435,11 +506,23 @@ function ProcessArrays() {
             readExcel3(file);
           }}
         />
+        </div>        
+        <div className='col'>
+          <div style={{padding:"5px", margin:'auto'}}>
+            <strong>Formatted Container List</strong>
+          </div>
+          <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel4(file);
+          }}
+        />
         </div>
         </div>
         <div className='col'>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={message}>Click Me</button>
+        <button className="btn btn-success btn-outline-dark" onClick={TagLocation}>Test Processor Button</button>
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
