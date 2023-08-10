@@ -4,6 +4,7 @@ import './App.css';
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
 import Second from './components/SecondComponent';
+import { getByDisplayValue } from '@testing-library/react';
 
 // Process for finding oldest month and qty in stock
 
@@ -12,6 +13,13 @@ function App() {
   const [delList, setDelList] = useState([]);
   const [tsStock, setTsStock] = useState([]);
   const [conList, setConList] = useState([]);
+
+  // console.log('this is the serial stock');
+  // console.log(serialStock);
+  // console.log('this is stStock');
+  // console.log(tsStock);
+  // console.log('this is conList');
+  // console.log(conList);
 
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -283,6 +291,7 @@ function AddStock(listarray, stockarray) {
 // delete un-needed columns
 function DeleteCol(listarray) {
   listarray.forEach(arr => {
+    delete arr.______________________________
     delete arr.PhoneNumber;
     delete arr.EMailAddress;
     delete arr.ShiptoFmtAddr1;
@@ -337,6 +346,7 @@ function ExcelDateToJSDate(serial) {
   );
 }
 
+
 let mod = "";
 let da = "";
 let qty = "";
@@ -361,6 +371,7 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   ];
   // this if statement cycles through model numbers from the Serialized Stock array using the date when items were added to inventory.
   // it exits the if statement when it reaches a new model number (how to capture the last item?)
+  // if (!mod) return;
   if (ModelwSN === mod || mod === "") {
     mod = ModelwSN;
     qty = Qty;
@@ -375,23 +386,83 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
         let mo = da.getMonth();
         for (let [key, value] of Object.entries(month[0])) {
           if (mo == value ) {
+        TagList[index].Tag = '';            
             TagList[index].oldest = key
-          } else {
-            console.log(key + "month not added");
-          }
+          } 
         }
         // TagList[index].oldest = da;
         TagList[index].Quantity = qty;
-      } else {
-        console.log("not added");
-      }
+      } 
     }
     mod = ModelwSN;
     da = date;
     qty = Qty;
-  } else {
-    console.log("nothing to show");
   }
+  // TRYING TO CATCH THE LAST ITEM IN THE OBJECT ARRAY
+  // if (x.__rowNum__ == largestNum) {
+  //   console.log('final order is:');
+
+  //   for (let index in TagList) {
+  //     if (TagList[index].StockShipped == mod) {
+  //       let mo = da.getMonth();
+  //       for (let [key, value] of Object.entries(month[0])) {
+  //         if (mo == value ) {
+  //           TagList[index].oldest = key
+  //         } 
+  //       }
+  //       // TagList[index].oldest = da;
+  //       TagList[index].Quantity = qty;
+  //     } 
+  //   }
+  //   mod = ModelwSN;
+  //   da = date;
+  //   qty = Qty;
+  // }
+}
+
+// fetching inventory data from Git Hub
+const endpointSerial = 'https://api.npoint.io/c84608a84126ebaf1999'
+const endpointStock = 'https://api.npoint.io/56de28fc22c2531a8b3a'
+const endpointConList = 'https://api.npoint.io/ab971f38aa08cdfd5aa2'
+
+const serialStockGit = [];
+const tsStockGit = [];
+const conListGit = [];
+
+const promSer = fetch(endpointSerial)
+.then(blob => blob.json())
+.then(data => serialStockGit.push(...data));
+
+const promSto = fetch(endpointStock)
+.then(blob => blob.json())
+.then(data => tsStockGit.push(...data));
+
+const promCon = fetch(endpointConList)
+.then(blob => blob.json())
+.then(data => conListGit.push(...data));
+
+// let req = new XMLHttpRequest();
+
+// req.onreadystatechange = () => {
+//   if (req.readyState == XMLHttpRequest.DONE) {
+//     console.log(req.responseText);
+//   }
+// };
+  
+// req.open("GET", "https://api.jsonbin.io/v3/b/64d310879d312622a38e3b79", true);
+// req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+// req.onload = () => {
+//   const data = JSON.parse(req.response);
+//   const serialStockGit = data.record;
+//   console.log(serialStockGit);
+
+// }
+// req.send();
+
+function displayFetch() {
+  const JsonInfo = tsStockGit
+  console.log('this is working');
+  console.log(JsonInfo);
 }
 
 function TagLocation(array2, array3, array4) {
@@ -427,12 +498,21 @@ function TagLocation(array2, array3, array4) {
   // console.table(array2);
 }
 
+let largestNum = 0;
 function ProcessArrays() {
-  const array1 = serialStock
+  // const array1 = serialStock
   const array2 = delList
-  const array3 = tsStock
-  const array4 = conList
+  // const array3 = tsStock
+  // const array4 = conList
+  // arrays fetched from Git Hub
+  const array1 = serialStockGit
+  const array3 = tsStockGit
+  const array4 = conListGit
   DeleteCol(array2);
+  // array2.forEach((x) => {
+//     (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
+// })
+// console.log(`the largest number is: ${largestNum}`) 
   array2.forEach((y) => {
     array1.forEach((x) => {
       // for each individual line in the Serialized Stock Array the Delivery list array cycles through
@@ -522,7 +602,7 @@ function ProcessArrays() {
         </div>
         <div className='col'>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={TagLocation}>Test Processor Button</button>
+        <button className="btn btn-success btn-outline-dark" onClick={console.log(serialStock)}>Test Processor Button</button>
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
