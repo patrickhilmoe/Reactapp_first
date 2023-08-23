@@ -181,6 +181,7 @@ function App() {
   // convert first report
   function convert() {
     const CSV = ConvertToCSV(delList);
+    // const JSON1 = JSON.stringify(delList);
     // $('#csv').append(ConvertToCSV(serialStock));
     var uri = "data:text/csv;charset=utf-8," + escape(CSV);
 
@@ -385,8 +386,7 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
       if (TagList[index].StockShipped == mod) {
         let mo = da.getMonth();
         for (let [key, value] of Object.entries(month[0])) {
-          if (mo == value ) {
-        TagList[index].Tag = '';            
+          if (mo == value ) {        
             TagList[index].oldest = key
           } 
         }
@@ -441,6 +441,42 @@ const promCon = fetch(endpointConList)
 .then(blob => blob.json())
 .then(data => conListGit.push(...data));
 
+const newUser = {
+  user: 3,
+  name: 'geralt the destroyer',
+  job: 'witcher'
+}
+
+function apirequest() {
+const req = new XMLHttpRequest();
+
+req.open('POST', 'https://api.npoint.io/874463ecb8b6880a7704');
+
+//MIME 
+req.setRequestHeader('Content-Type', 'application/json')
+
+  req.onload = () => {
+    if (req.status === 201 && req.readyState === 4) {
+      const res = JSON.parse(req.responseText);
+        console.log(res);
+    } else {
+      console.log("Bad request");
+    }
+  }
+
+req.send(JSON.stringify(newUser));
+}
+
+// function deleteRequest() {
+// fetch('https://api.npoint.io/c84608a84126ebaf1999', {
+//   method: 'DELETE',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   body: null //if you do not want to send any addional data,  replace the complete JSON.stringify(YOUR_ADDITIONAL_DATA) with null
+// })
+// }
+
 // let req = new XMLHttpRequest();
 
 // req.onreadystatechange = () => {
@@ -458,6 +494,29 @@ const promCon = fetch(endpointConList)
 
 // }
 // req.send();
+
+function deleteRequest() {
+let req = new XMLHttpRequest();
+
+// req.onreadystatechange = () => {
+//   if (req.readyState == XMLHttpRequest.DONE) {
+//     console.log(req.responseText);
+//   }
+// };
+  
+req.open("GET", "https://api.npoint.io/c84608a84126ebaf1999", true);
+// req.setRequestHeader('', "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+req.onload = () => {
+  if (req.status === 200 && req.readyState === 4) {
+    const data = JSON.parse(req.responseText);
+    const serialStockGit = data.record;
+    console.log(serialStockGit);
+  } else {
+    throw new Error("bad request");
+  }
+}
+req.send();
+}
 
 function displayFetch() {
   const JsonInfo = tsStockGit
@@ -513,6 +572,7 @@ function ProcessArrays() {
 //     (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
 // })
 // console.log(`the largest number is: ${largestNum}`) 
+  TagLocation(array2, array3, array4);
   array2.forEach((y) => {
     array1.forEach((x) => {
       // for each individual line in the Serialized Stock Array the Delivery list array cycles through
@@ -530,8 +590,10 @@ function ProcessArrays() {
     });
   });
   AddStock(array2, array3)
-  TagLocation(array2, array3, array4);
+  console.log('Table Version')
   console.table(delList);
+  console.log('Object Array Version');
+  console.log(delList);
 }
 
   return (
@@ -608,7 +670,7 @@ function ProcessArrays() {
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={convert}>Convert to CSV</button>
+        <button className="btn btn-success btn-outline-dark" onClick={apirequest}>Convert to CSV</button>
         </div>
         </div>
         </div>
