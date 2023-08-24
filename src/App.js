@@ -420,7 +420,7 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   // }
 }
 
-// fetching inventory data from Git Hub
+// fetching inventory data 
 const endpointSerial = 'https://api.npoint.io/c84608a84126ebaf1999'
 const endpointStock = 'https://api.npoint.io/56de28fc22c2531a8b3a'
 const endpointConList = 'https://api.npoint.io/ab971f38aa08cdfd5aa2'
@@ -429,17 +429,17 @@ const serialStockGit = [];
 const tsStockGit = [];
 const conListGit = [];
 
-const promSer = fetch(endpointSerial)
-.then(blob => blob.json())
-.then(data => serialStockGit.push(...data));
+// const promSer = fetch(endpointSerial)
+// .then(blob => blob.json())
+// .then(data => serialStockGit.push(...data));
 
-const promSto = fetch(endpointStock)
-.then(blob => blob.json())
-.then(data => tsStockGit.push(...data));
+// const promSto = fetch(endpointStock)
+// .then(blob => blob.json())
+// .then(data => tsStockGit.push(...data));
 
-const promCon = fetch(endpointConList)
-.then(blob => blob.json())
-.then(data => conListGit.push(...data));
+// const promCon = fetch(endpointConList)
+// .then(blob => blob.json())
+// .then(data => conListGit.push(...data));
 
 const newUser = {
   user: 3,
@@ -450,21 +450,38 @@ const newUser = {
 function apirequest() {
 const req = new XMLHttpRequest();
 
-req.open('POST', 'https://api.npoint.io/874463ecb8b6880a7704');
-
-//MIME 
-req.setRequestHeader('Content-Type', 'application/json')
-
-  req.onload = () => {
-    if (req.status === 201 && req.readyState === 4) {
-      const res = JSON.parse(req.responseText);
-        console.log(res);
-    } else {
-      console.log("Bad request");
-    }
+req.onreadystatechange = () => {
+  console.log(req.readyState);
+  if (req.readyState == XMLHttpRequest.DONE) {
+    console.log(req.responseText);
   }
+};
+  
+req.open("PUT", "https://api.jsonbin.io/v3/b/64e580a08e4aa6225ed3fe9b", true);
+req.setRequestHeader("Content-Type", "application/json");
+req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+req.send('{"sample": "Hello World"}');
 
-req.send(JSON.stringify(newUser));
+
+// // req.open('POST', 'https://api.npoint.io/874463ecb8b6880a7704');
+
+// req.open("POST", "https://api.jsonbin.io/v3/b/64d310879d312622a38e3b79", true);
+// req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+
+// //MIME 
+// req.setRequestHeader('Content-Type', 'application/json')
+
+//   req.onload = () => {
+//     if (req.status === 200 && req.readyState === 4) {
+//       const res = JSON.parse(req.responseText);
+//         console.log(res);
+//     } else {
+//       console.log("Bad request");
+//     }
+//   }
+
+// req.send(JSON.stringify(newUser));
+// // req.send();
 }
 
 // function deleteRequest() {
@@ -524,6 +541,69 @@ function displayFetch() {
   console.log(JsonInfo);
 }
 
+// Updated fetching and updating
+const endpointTSserial = "https://api.jsonbin.io/v3/b/64e588e2b89b1e2299d4abfa"
+const endpointTSstock = "https://api.jsonbin.io/v3/b/64e588ff8e4aa6225ed40116"
+const endpointContainerList = "https://api.jsonbin.io/v3/b/64e58918b89b1e2299d4ac08"
+
+function apirequest2() {
+  getSerialStock();
+  // getStock();
+  // getConList();
+}
+
+function getSerialStock() {
+const req = new XMLHttpRequest();
+
+req.onreadystatechange = () => {
+  if (req.readyState == XMLHttpRequest.DONE) {
+    const res = JSON.parse(req.responseText)
+    console.log(res.record);
+    serialStockGit.push(...res.record);
+    console.log('serialStock has been updated:');
+    console.log(serialStockGit);
+  }
+};
+  
+req.open("GET", endpointTSserial, true);
+req.setRequestHeader("Content-Type", "application/json");
+req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+req.send();
+}
+
+function getConList() {
+  const req = new XMLHttpRequest();
+  
+  req.onreadystatechange = () => {
+    if (req.readyState == XMLHttpRequest.DONE) {
+      const res = JSON.parse(req.responseText)
+      conListGit.push(...res.record);
+      console.log('conList has been updated:');
+      console.log(conListGit);
+    }
+  };
+    
+  req.open("GET", endpointContainerList, true);
+  req.setRequestHeader("Content-Type", "application/json");
+  req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+  req.send();
+  }
+
+  function ConListUpdate() {
+    const req = new XMLHttpRequest();
+
+    req.onreadystatechange = () => {
+      if (req.readyState == XMLHttpRequest.DONE) {
+        console.log(JSON.stringify(req.responseText));
+      }
+    };
+      
+    req.open("PUT", endpointContainerList, true);
+    req.setRequestHeader("Content-Type", "application/json");
+    req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
+    req.send(JSON.stringify(conList));
+  }
+
 function TagLocation(array2, array3, array4) {
   // const array2 = delList;
   // const array3 = tsStock;
@@ -559,14 +639,12 @@ function TagLocation(array2, array3, array4) {
 
 let largestNum = 0;
 function ProcessArrays() {
-  // const array1 = serialStock
+  const array1 = serialStock
   const array2 = delList
-  // const array3 = tsStock
+  const array3 = tsStock
   // const array4 = conList
-  // arrays fetched from Git Hub
-  const array1 = serialStockGit
-  const array3 = tsStockGit
-  const array4 = conListGit
+  // arrays fetched from JSON Bin
+  const array4 = conList
   DeleteCol(array2);
   // array2.forEach((x) => {
 //     (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
@@ -649,6 +727,29 @@ function ProcessArrays() {
           }}
         />
         </div>        
+        {/* <div className='col'>
+          <div style={{padding:"5px", margin:'auto'}}>
+            <strong>Formatted Container List</strong>
+          </div>
+          <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel4(file);
+          }}
+        />
+        </div> */}
+        </div>
+        <div className='col'>
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
+        <button className="btn btn-success btn-outline-dark" onClick={getConList}>Update Local Con List</button>
+        </div>
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
+        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
+        </div>
+        {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
+        <button className="btn btn-success btn-outline-dark" onClick={apirequest2}>Update Local Con List File</button>
+        </div> */}
         <div className='col'>
           <div style={{padding:"5px", margin:'auto'}}>
             <strong>Formatted Container List</strong>
@@ -661,16 +762,8 @@ function ProcessArrays() {
           }}
         />
         </div>
-        </div>
-        <div className='col'>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={console.log(serialStock)}>Test Processor Button</button>
-        </div>
-        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
-        </div>
-        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={apirequest}>Convert to CSV</button>
+        <button className="btn btn-success btn-outline-dark" onClick={ConListUpdate}>Update Con List Bin</button>
         </div>
         </div>
         </div>
