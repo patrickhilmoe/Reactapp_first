@@ -612,10 +612,13 @@ function ProcessArrays() {
 // console.log(`the largest number is: ${largestNum}`) 
   TagLocation(array2, array3, array4);
   array2.forEach((y) => {
+    console.log('tag list loop started');
     array1.forEach((x) => {
+      console.log('serial list loop started');
       // for each individual line in the Serialized Stock Array the Delivery list array cycles through
       // these two 'if' statements move forward when the model number and location in the Serialized Stock Array matches the Delivery list array
       if (x.StockNumber === y.StockShipped) {
+        console.log(`stock numbers match: ${x.StockNumber}`);
         if (x.Location == y.LocationNumber) {
           console.log(`model from serial stock is ${x.StockNumber}`);
           console.log(`date from serial stock is ${x.PurchaseDate}}`);
