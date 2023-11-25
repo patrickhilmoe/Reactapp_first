@@ -341,6 +341,11 @@ let qty = "";
 //Return modelnumber with date and quantity in key/value pairs
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   let date = ExcelDateToJSDate(purdate);
+
+  console.log(`model from serial stock is ${ModelwSN}`);
+  console.log(`date from serial stock is ${purdate}`);
+  console.log(`Quantity on hand is ${Qty}`);
+  
   const month = [
     {
       "JAN": 0,
