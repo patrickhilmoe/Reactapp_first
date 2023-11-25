@@ -345,7 +345,7 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   console.log(`model from serial stock is ${ModelwSN}`);
   console.log(`date from serial stock is ${purdate}`);
   console.log(`Quantity on hand is ${Qty}`);
-  
+
   const month = [
     {
       "JAN": 0,
@@ -617,6 +617,9 @@ function ProcessArrays() {
       // these two 'if' statements move forward when the model number and location in the Serialized Stock Array matches the Delivery list array
       if (x.StockNumber === y.StockShipped) {
         if (x.Location == y.LocationNumber) {
+          console.log(`model from serial stock is ${x.StockNumber}`);
+          console.log(`date from serial stock is ${x.PurchaseDate}}`);
+          console.log(`Quantity on hand is ${x.QuantityOnHand}`);
           modelDatePair(
             x.StockNumber,
             x.PurchaseDate,
