@@ -448,6 +448,8 @@ function ListKeyUpdate(array) {
       delete item ['______________________________'];
       item['PhoneNumber'] = item['Phone Number'];
       delete item ['Phone Number'];
+      item['ShiptoName'] = item['Ship-to Name'];
+      delete item ['Ship-to Name'];
       item['EMailAddress'] = item['EMail Address'];
       delete item ['EMail Address'];
       item['ShiptoFmtAddr1'] = item['Ship-to Address 1'];
