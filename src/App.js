@@ -612,17 +612,11 @@ function ProcessArrays() {
 // console.log(`the largest number is: ${largestNum}`) 
   TagLocation(array2, array3, array4);
   array2.forEach((y) => {
-    console.log('tag list loop started');
     array1.forEach((x) => {
-      console.log('serial list loop started');
       // for each individual line in the Serialized Stock Array the Delivery list array cycles through
       // these two 'if' statements move forward when the model number and location in the Serialized Stock Array matches the Delivery list array
       if (x.StockNumber === y.StockShipped) {
-        console.log(`stock numbers match: ${x.StockNumber}`);
         if (x.Location == y.LocationNumber) {
-          console.log(`model from serial stock is ${x.StockNumber}`);
-          console.log(`date from serial stock is ${x.PurchaseDate}}`);
-          console.log(`Quantity on hand is ${x.QuantityOnHand}`);
           modelDatePair(
             x.StockNumber,
             x.PurchaseDate,
@@ -693,14 +687,6 @@ function ProcessArrays() {
           }}
         />
         </div>
-        </div>
-        <div className='col'>
-        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={getConList}>Update Local Con List</button>
-        </div>
-        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
-        </div>
         <div className='col'>
           <div style={{padding:"5px", margin:'auto'}}>
             <strong>Formatted Container List</strong>
@@ -714,17 +700,26 @@ function ProcessArrays() {
         />
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={ConListUpdate}>Update Con List Bin</button>
+        <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
         </div>
+        </div>
+        <div className='col'>
+        {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
+        <button className="btn btn-success btn-outline-dark" onClick={getConList}>Update Local Con List</button>
+        </div> */}
+        {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
+        <button className="btn btn-success btn-outline-dark" onClick={ConListUpdate}>Update Con List Bin</button>
+        </div> */}
         </div>
         </div>
       </div>
-      <div>
+      {/* <div>
         <p>
           -----------------------------------------------------------------------------------
         </p>
       </div>
-      <Second/>
+      <Second/> */}
+
       {/* <table className="table">
         <thead>
           <tr>
