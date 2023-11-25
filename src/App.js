@@ -456,7 +456,6 @@ function ListKeyUpdate(array) {
       delete item ['Header Text Expanded'];
       return item;
       })
-      console.log(array)
 };
 
 function StockKeyUpdate(array) {
@@ -487,7 +486,6 @@ function StockKeyUpdate(array) {
       delete item ['Qty On Requisition'];
       return item;
       })
-      console.log(array)
 };
 
 function SerialStockKeyUpdate(array) {
@@ -512,7 +510,6 @@ function SerialStockKeyUpdate(array) {
       delete item ['Average Cost'];
       return item;
       })
-      console.log(array)
 };
 
 const serialStockGit = [];
@@ -565,7 +562,7 @@ function TagLocation(array2, array3, array4) {
   array2.forEach((y) => {
     array4.forEach((x) => {
       if(y.StockShipped === x.Model) {
-        console.log(`${y.StockShipped} is in container ${x.Loc}`);
+        // console.log(`${y.StockShipped} is in container ${x.Loc}`);
         return y.Row = x.Loc
       }
       if(y.LocationNumber == 200) {
@@ -627,6 +624,9 @@ function ProcessArrays() {
   // console.log('Table Version')
   // console.table(delList);
   console.log('COPY AND PASTE');
+  console.log('||');
+  console.log('||');
+  console.log('VV');
   console.log(delList);
 }
 
