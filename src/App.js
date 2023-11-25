@@ -436,8 +436,8 @@ function ListKeyUpdate(array) {
       delete item ['Quantity To Ship'];
       item['LocationNumber'] = item['Location Number'];
       delete item ['Location Number'];
-      item['______________________________'] = item['______________________________'];
-      delete item ['______________________________'];
+      // item['______________________________'] = item['______________________________'];
+      // delete item ['______________________________'];
       item['PhoneNumber'] = item['Phone Number'];
       delete item ['Phone Number'];
       item['ShiptoName'] = item['Ship-to Name'];
@@ -467,10 +467,10 @@ function StockKeyUpdate(array) {
   let updatedArray = array.map(item => {
       item['StockNumber'] = item['Model #'];
       delete item['Model #'];
-      item['Brand'] = item['Brand'];
-      delete item ['Brand'];
-      item['Loc'] = item['Loc'];
-      delete item ['Loc'];
+      // item['Brand'] = item['Brand'];
+      // delete item ['Brand'];
+      // item['Loc'] = item['Loc'];
+      // delete item ['Loc'];
       item['StockDescription1'] = item['Stock Description 1'];
       delete item ['Stock Description 1'];
       item['QuantityOnHand'] = item['Qty On Hand'];
@@ -500,8 +500,8 @@ function SerialStockKeyUpdate(array) {
       delete item['Stock Number'];
       item['TrackingNumber'] = item['Tracking Number'];
       delete item ['Tracking Number'];
-      item['Location'] = item['Location'];
-      delete item ['Location'];
+      // item['Location'] = item['Location'];
+      // delete item ['Location'];
       item['StockDescription1'] = item['Stock Description 1'];
       delete item ['Stock Description 1'];
       item['PurchaseDate'] = item['Purchase Date'];
