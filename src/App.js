@@ -421,155 +421,118 @@ function modelDatePair(ModelwSN, purdate, TagList, Qty) {
 }
 
 // fetching inventory data 
-const endpointSerial = 'https://api.npoint.io/c84608a84126ebaf1999'
-const endpointStock = 'https://api.npoint.io/56de28fc22c2531a8b3a'
-const endpointConList = 'https://api.npoint.io/ab971f38aa08cdfd5aa2'
+
+// -------------------------------------------
+// updating keys in uploaded excel files
+function ListKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['OrderNumber'] = item['Order Number'];
+      delete item['Order Number'];
+      item['CustomerNumber'] = item['Customer Number'];
+      delete item ['Customer Number'];
+      item['CustomerName'] = item['Customer Name'];
+      delete item ['Customer Name'];
+      item['Salesperson'] = item['Salesperson'];
+      delete item ['Salesperson'];
+      item['StockShipped'] = item['Stock # Shipped'];
+      delete item ['Stock # Shipped'];
+      item['Description1'] = item['Description 1'];
+      delete item ['Description 1'];
+      item['ShippingDate'] = item['Shipping Date'];
+      delete item ['Shipping Date'];
+      item['QuantityToShip'] = item['Quantity To Ship'];
+      delete item ['Quantity To Ship'];
+      item['LocationNumber'] = item['Location Number'];
+      delete item ['Location Number'];
+      item['______________________________'] = item['______________________________'];
+      delete item ['______________________________'];
+      item['PhoneNumber'] = item['Phone Number'];
+      delete item ['Phone Number'];
+      item['EMailAddress'] = item['EMail Address'];
+      delete item ['EMail Address'];
+      item['ShiptoFmtAddr1'] = item['Ship-to Address 1'];
+      delete item ['Ship-to Address 1'];
+      item['ShiptoFmtAddr2'] = item['Ship-to Address 2'];
+      delete item ['Ship-to Address 2'];
+      item['ShiptoFmtAddr3'] = item['Ship-to Address 3'];
+      delete item ['Ship-to Address 3'];
+      item['ShiptoCity'] = item['Ship-to City'];
+      delete item ['Ship-to City'];
+      item['ShiptoState'] = item['Ship-to State'];
+      delete item ['Ship-to State'];
+      item['ShiptoZipCode'] = item['Ship-to Zip Code'];
+      delete item ['Ship-to Zip Code'];
+      item['HeaderTextExpanded'] = item['Header Text Expanded'];
+      delete item ['Header Text Expanded'];
+      return item;
+      })
+      console.log(updatedArray)
+};
+
+function StockKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['StockNumber'] = item['Model #'];
+      delete item['Model #'];
+      item['Brand'] = item['Brand'];
+      delete item ['Brand'];
+      item['Loc'] = item['Loc'];
+      delete item ['Loc'];
+      item['StockDescription1'] = item['Stock Description 1'];
+      delete item ['Stock Description 1'];
+      item['QuantityOnHand'] = item['Qty On Hand'];
+      delete item ['Qty On Hand'];
+      item['QuantityCommitted'] = item['Qty Com'];
+      delete item ['Qty Com'];
+      item['QuantityAvailable'] = item['Qty Avail'];
+      delete item ['Qty Avail'];
+      item['AvgCost'] = item['Avg Cost'];
+      delete item ['Avg Cost'];
+      item['YTDSold'] = item['YTD Sold'];
+      delete item ['YTD Sold'];
+      item['DateLastReceived'] = item['Date Last Received'];
+      delete item ['Date Last Received'];
+      item['ProductCategory'] = item['Product Category'];
+      delete item ['Product Category'];
+      item['QtyOnRequisition'] = item['Qty On Requisition'];
+      delete item ['Qty On Requisition'];
+      return item;
+      })
+      console.log(updatedArray)
+};
+
+function SerialStockKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['StockNumber'] = item['Stock Number'];
+      delete item['Stock Number'];
+      item['TrackingNumber'] = item['Tracking Number'];
+      delete item ['Tracking Number'];
+      item['Location'] = item['Location'];
+      delete item ['Location'];
+      item['StockDescription1'] = item['Stock Description 1'];
+      delete item ['Stock Description 1'];
+      item['PurchaseDate'] = item['Purchase Date'];
+      delete item ['Purchase Date'];
+      item['CALC1'] = item['CALC1'];
+      delete item ['CALC1'];
+      item['QuantityOnHand'] = item['Quantity On Hand'];
+      delete item ['Quantity On Hand'];
+      item['QuantityCommitted'] = item['Quantity Committed'];
+      delete item ['Quantity Committed'];
+      item['AverageCost'] = item['Average Cost'];
+      delete item ['Average Cost'];
+      return item;
+      })
+      console.log(updatedArray)
+};
 
 const serialStockGit = [];
 const tsStockGit = [];
 const conListGit = [];
 
-// const promSer = fetch(endpointSerial)
-// .then(blob => blob.json())
-// .then(data => serialStockGit.push(...data));
-
-// const promSto = fetch(endpointStock)
-// .then(blob => blob.json())
-// .then(data => tsStockGit.push(...data));
-
-// const promCon = fetch(endpointConList)
-// .then(blob => blob.json())
-// .then(data => conListGit.push(...data));
-
-const newUser = {
-  user: 3,
-  name: 'geralt the destroyer',
-  job: 'witcher'
-}
-
-function apirequest() {
-const req = new XMLHttpRequest();
-
-req.onreadystatechange = () => {
-  console.log(req.readyState);
-  if (req.readyState == XMLHttpRequest.DONE) {
-    console.log(req.responseText);
-  }
-};
-  
-req.open("PUT", "https://api.jsonbin.io/v3/b/64e580a08e4aa6225ed3fe9b", true);
-req.setRequestHeader("Content-Type", "application/json");
-req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
-req.send('{"sample": "Hello World"}');
-
-
-// // req.open('POST', 'https://api.npoint.io/874463ecb8b6880a7704');
-
-// req.open("POST", "https://api.jsonbin.io/v3/b/64d310879d312622a38e3b79", true);
-// req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
-
-// //MIME 
-// req.setRequestHeader('Content-Type', 'application/json')
-
-//   req.onload = () => {
-//     if (req.status === 200 && req.readyState === 4) {
-//       const res = JSON.parse(req.responseText);
-//         console.log(res);
-//     } else {
-//       console.log("Bad request");
-//     }
-//   }
-
-// req.send(JSON.stringify(newUser));
-// // req.send();
-}
-
-// function deleteRequest() {
-// fetch('https://api.npoint.io/c84608a84126ebaf1999', {
-//   method: 'DELETE',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-//   body: null //if you do not want to send any addional data,  replace the complete JSON.stringify(YOUR_ADDITIONAL_DATA) with null
-// })
-// }
-
-// let req = new XMLHttpRequest();
-
-// req.onreadystatechange = () => {
-//   if (req.readyState == XMLHttpRequest.DONE) {
-//     console.log(req.responseText);
-//   }
-// };
-  
-// req.open("GET", "https://api.jsonbin.io/v3/b/64d310879d312622a38e3b79", true);
-// req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
-// req.onload = () => {
-//   const data = JSON.parse(req.response);
-//   const serialStockGit = data.record;
-//   console.log(serialStockGit);
-
-// }
-// req.send();
-
-function deleteRequest() {
-let req = new XMLHttpRequest();
-
-// req.onreadystatechange = () => {
-//   if (req.readyState == XMLHttpRequest.DONE) {
-//     console.log(req.responseText);
-//   }
-// };
-  
-req.open("GET", "https://api.npoint.io/c84608a84126ebaf1999", true);
-// req.setRequestHeader('', "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
-req.onload = () => {
-  if (req.status === 200 && req.readyState === 4) {
-    const data = JSON.parse(req.responseText);
-    const serialStockGit = data.record;
-    console.log(serialStockGit);
-  } else {
-    throw new Error("bad request");
-  }
-}
-req.send();
-}
-
-function displayFetch() {
-  const JsonInfo = tsStockGit
-  console.log('this is working');
-  console.log(JsonInfo);
-}
-
 // Updated fetching and updating
 const endpointTSserial = "https://api.jsonbin.io/v3/b/64e588e2b89b1e2299d4abfa"
 const endpointTSstock = "https://api.jsonbin.io/v3/b/64e588ff8e4aa6225ed40116"
 const endpointContainerList = "https://api.jsonbin.io/v3/b/64e58918b89b1e2299d4ac08"
-
-function apirequest2() {
-  getSerialStock();
-  // getStock();
-  // getConList();
-}
-
-function getSerialStock() {
-const req = new XMLHttpRequest();
-
-req.onreadystatechange = () => {
-  if (req.readyState == XMLHttpRequest.DONE) {
-    const res = JSON.parse(req.responseText)
-    console.log(res.record);
-    serialStockGit.push(...res.record);
-    console.log('serialStock has been updated:');
-    console.log(serialStockGit);
-  }
-};
-  
-req.open("GET", endpointTSserial, true);
-req.setRequestHeader("Content-Type", "application/json");
-req.setRequestHeader("X-Master-Key", "$2b$10$fwW3McDXIT8/phV7P.l9zu.AI4aGG8tyY5mNjNCiTSfKDi9pbC3eC");
-req.send();
-}
 
 function getConList() {
   const req = new XMLHttpRequest();
@@ -642,9 +605,12 @@ function ProcessArrays() {
   const array1 = serialStock
   const array2 = delList
   const array3 = tsStock
-  // const array4 = conList
-  // arrays fetched from JSON Bin
   const array4 = conList
+  ListKeyUpdate(array2);
+  StockKeyUpdate(array3);
+  SerialStockKeyUpdate(array1);
+  // arrays fetched from JSON Bin
+  // const array4 = conListGit
   DeleteCol(array2);
   // array2.forEach((x) => {
 //     (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
@@ -726,19 +692,7 @@ function ProcessArrays() {
             readExcel3(file);
           }}
         />
-        </div>        
-        {/* <div className='col'>
-          <div style={{padding:"5px", margin:'auto'}}>
-            <strong>Formatted Container List</strong>
-          </div>
-          <input
-          type="file"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            readExcel4(file);
-          }}
-        />
-        </div> */}
+        </div>
         </div>
         <div className='col'>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
@@ -747,9 +701,6 @@ function ProcessArrays() {
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
         </div>
-        {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
-        <button className="btn btn-success btn-outline-dark" onClick={apirequest2}>Update Local Con List File</button>
-        </div> */}
         <div className='col'>
           <div style={{padding:"5px", margin:'auto'}}>
             <strong>Formatted Container List</strong>

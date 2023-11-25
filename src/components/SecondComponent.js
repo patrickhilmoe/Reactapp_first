@@ -128,11 +128,117 @@ function Second() {
     $("a").append("Download");
   }
 
+// -------------------------------------------
+// updating keys in uploaded excel files
+function ListKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['OrderNumber'] = item['Order Number'];
+      delete item['Order Number'];
+      item['CustomerNumber'] = item['Customer Number'];
+      delete item ['Customer Number'];
+      item['CustomerName'] = item['Customer Name'];
+      delete item ['Customer Name'];
+      item['Salesperson'] = item['Salesperson'];
+      delete item ['Salesperson'];
+      item['StockShipped'] = item['Stock # Shipped'];
+      delete item ['Stock # Shipped'];
+      item['Description1'] = item['Description 1'];
+      delete item ['Description 1'];
+      item['ShippingDate'] = item['Shipping Date'];
+      delete item ['Shipping Date'];
+      item['QuantityToShip'] = item['Quantity To Ship'];
+      delete item ['Quantity To Ship'];
+      item['LocationNumber'] = item['Location Number'];
+      delete item ['Location Number'];
+      item['______________________________'] = item['______________________________'];
+      delete item ['______________________________'];
+      item['PhoneNumber'] = item['Phone Number'];
+      delete item ['Phone Number'];
+      item['EMailAddress'] = item['EMail Address'];
+      delete item ['EMail Address'];
+      item['ShiptoFmtAddr1'] = item['Ship-to Address 1'];
+      delete item ['Ship-to Address 1'];
+      item['ShiptoFmtAddr2'] = item['Ship-to Address 2'];
+      delete item ['Ship-to Address 2'];
+      item['ShiptoFmtAddr3'] = item['Ship-to Address 3'];
+      delete item ['Ship-to Address 3'];
+      item['ShiptoCity'] = item['Ship-to City'];
+      delete item ['Ship-to City'];
+      item['ShiptoState'] = item['Ship-to State'];
+      delete item ['Ship-to State'];
+      item['ShiptoZipCode'] = item['Ship-to Zip Code'];
+      delete item ['Ship-to Zip Code'];
+      item['HeaderTextExpanded'] = item['Header Text Expanded'];
+      delete item ['Header Text Expanded'];
+      return item;
+      })
+      console.log(updatedArray)
+};
+
+function StockKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['StockNumber'] = item['Model #'];
+      delete item['Model #'];
+      item['Brand'] = item['Brand'];
+      delete item ['Brand'];
+      item['Loc'] = item['Loc'];
+      delete item ['Loc'];
+      item['StockDescription1'] = item['Stock Description 1'];
+      delete item ['Stock Description 1'];
+      item['QuantityOnHand'] = item['Qty On Hand'];
+      delete item ['Qty On Hand'];
+      item['QuantityCommitted'] = item['Qty Com'];
+      delete item ['Qty Com'];
+      item['QuantityAvailable'] = item['Qty Avail'];
+      delete item ['Qty Avail'];
+      item['AvgCost'] = item['Avg Cost'];
+      delete item ['Avg Cost'];
+      item['YTDSold'] = item['YTD Sold'];
+      delete item ['YTD Sold'];
+      item['DateLastReceived'] = item['Date Last Received'];
+      delete item ['Date Last Received'];
+      item['ProductCategory'] = item['Product Category'];
+      delete item ['Product Category'];
+      item['QtyOnRequisition'] = item['Qty On Requisition'];
+      delete item ['Qty On Requisition'];
+      return item;
+      })
+      console.log(updatedArray)
+};
+
+function SerialStockKeyUpdate(array) {
+  let updatedArray = array.map(item => {
+      item['StockNumber'] = item['Stock Number'];
+      delete item['Stock Number'];
+      item['TrackingNumber'] = item['Tracking Number'];
+      delete item ['Tracking Number'];
+      item['Location'] = item['Location'];
+      delete item ['Location'];
+      item['StockDescription1'] = item['Stock Description 1'];
+      delete item ['Stock Description 1'];
+      item['PurchaseDate'] = item['Purchase Date'];
+      delete item ['Purchase Date'];
+      item['CALC1'] = item['CALC1'];
+      delete item ['CALC1'];
+      item['QuantityOnHand'] = item['Quantity On Hand'];
+      delete item ['Quantity On Hand'];
+      item['QuantityCommitted'] = item['Quantity Committed'];
+      delete item ['Quantity Committed'];
+      item['AverageCost'] = item['Average Cost'];
+      delete item ['Average Cost'];
+      return item;
+      })
+      console.log(updatedArray)
+};
+
     // -----------------------------------------
 // List processor for service times
 
 function ExecuteServiceTime() {
-    ServiceTime(items3, timeArr, starNum, items4);
+  ListKeyUpdate(items3);
+  StockKeyUpdate(items4);
+  // SerialStockKeyUpdate();
+  ServiceTime(items3, timeArr, starNum, items4);
 }
 
 let largestNum = 0;
