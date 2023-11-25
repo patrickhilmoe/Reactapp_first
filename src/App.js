@@ -295,6 +295,7 @@ function DeleteCol(listarray) {
     delete arr.______________________________
     delete arr.PhoneNumber;
     delete arr.EMailAddress;
+    delete arr.ShiptoName;
     delete arr.ShiptoFmtAddr1;
     delete arr.ShiptoFmtAddr2;
     delete arr.ShiptoFmtAddr3;
@@ -302,21 +303,7 @@ function DeleteCol(listarray) {
     delete arr.ShiptoCity;
     delete arr.ShiptoState;
     delete arr.ShiptoZipCode;
-    delete arr.HeaderText1;
-    delete arr.HeaderText2;
-    delete arr.HeaderText3;
-    delete arr.HeaderText4;
-    delete arr.HeaderText5;
-    delete arr.HeaderText6;
-    delete arr.HeaderText7;
-    delete arr.HeaderText8;
-    delete arr.HeaderText9;
-    delete arr.HeaderText10;
-    delete arr.HeaderText11;
-    delete arr.HeaderText12;
-    delete arr.HeaderText13;
-    delete arr.HeaderText14;
-    delete arr.HeaderText15;
+    delete arr.HeaderTextExpanded;
   })
 }
 
