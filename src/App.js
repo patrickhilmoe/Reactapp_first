@@ -624,9 +624,9 @@ function ProcessArrays() {
     });
   });
   AddStock(array2, array3)
-  console.log('Table Version')
-  console.table(delList);
-  console.log('Object Array Version');
+  // console.log('Table Version')
+  // console.table(delList);
+  console.log('COPY AND PASTE');
   console.log(delList);
 }
 
