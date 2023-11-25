@@ -342,10 +342,6 @@ let qty = "";
 function modelDatePair(ModelwSN, purdate, TagList, Qty) {
   let date = ExcelDateToJSDate(purdate);
 
-  console.log(`model from serial stock is ${ModelwSN}`);
-  console.log(`date from serial stock is ${purdate}`);
-  console.log(`Quantity on hand is ${Qty}`);
-
   const month = [
     {
       "JAN": 0,
@@ -424,8 +420,8 @@ function ListKeyUpdate(array) {
       delete item ['Customer Number'];
       item['CustomerName'] = item['Customer Name'];
       delete item ['Customer Name'];
-      item['Salesperson'] = item['Salesperson'];
-      delete item ['Salesperson'];
+      // item['Salesperson'] = item['Salesperson'];
+      // delete item ['Salesperson'];
       item['StockShipped'] = item['Stock # Shipped'];
       delete item ['Stock # Shipped'];
       item['Description1'] = item['Description 1'];
