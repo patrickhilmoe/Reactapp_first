@@ -460,7 +460,7 @@ function ListKeyUpdate(array) {
       delete item ['Header Text Expanded'];
       return item;
       })
-      console.log(updatedArray)
+      console.log(array)
 };
 
 function StockKeyUpdate(array) {
@@ -491,7 +491,7 @@ function StockKeyUpdate(array) {
       delete item ['Qty On Requisition'];
       return item;
       })
-      console.log(updatedArray)
+      console.log(array)
 };
 
 function SerialStockKeyUpdate(array) {
@@ -516,7 +516,7 @@ function SerialStockKeyUpdate(array) {
       delete item ['Average Cost'];
       return item;
       })
-      console.log(updatedArray)
+      console.log(array)
 };
 
 const serialStockGit = [];
