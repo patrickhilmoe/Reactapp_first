@@ -80,7 +80,6 @@ function App() {
         setDelList(d);
       });
 
-
   };
 
   const readExcel3 = (file) => {
@@ -145,24 +144,40 @@ function App() {
       // ---------------------------------------------------------------------
 
     // JSON to CSV Converter
+    // const ConvertToCSV = function(objArray) {
+    //   // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+    //   // console.log(array[0]);
+    //   // var str = "";
+
+    //   // for (var i = 0; i < array.length; i++) {
+    //   //   var line = "";
+    //   //   for (var index in array[i]) {
+    //   //     if (line !== "") line += ","
+
+    //   //     line += array[i][index];
+    //   //   }
+
+    //   //   str += line + "\r\n";
+    //   // }
+    //   // console.log(str);
+    //   // return str;
+
+    //   var json = objArray
+    //   var fields = Object.keys(json[0])
+    //   var replacer = function(key, value) { return value === null ? '' : value } 
+    //   var csv = json.map(function(row){
+    //     return fields.map(function(fieldName){
+    //     return JSON.stringify(row[fieldName], replacer)
+    //     }).join(',')
+    //     })
+    //     csv.unshift(fields.join(',')) // add header column
+    //       csv = csv.join('\r\n');
+    //     console.log(csv)
+    //     return csv;
+
+    // }
+
     const ConvertToCSV = function(objArray) {
-      // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
-      // console.log(array[0]);
-      // var str = "";
-
-      // for (var i = 0; i < array.length; i++) {
-      //   var line = "";
-      //   for (var index in array[i]) {
-      //     if (line !== "") line += ","
-
-      //     line += array[i][index];
-      //   }
-
-      //   str += line + "\r\n";
-      // }
-      // console.log(str);
-      // return str;
-
       var json = objArray
       var fields = Object.keys(json[0])
       var replacer = function(key, value) { return value === null ? '' : value } 
@@ -175,28 +190,38 @@ function App() {
           csv = csv.join('\r\n');
         console.log(csv)
         return csv;
+    }
 
+    function convertV2(list) {
+      const CSV = ConvertToCSV(list);
+    let link = document.createElement('a')
+    link.id = 'download-csv'
+    link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(CSV));
+    link.setAttribute('download', 'yourfiletextgoeshere.csv');
+    document.body.appendChild(link)
+    document.querySelector('#download-csv').click()
     }
 
   // convert first report
   function convert() {
-    const CSV = ConvertToCSV(delList);
-    // const JSON1 = JSON.stringify(delList);
-    // $('#csv').append(ConvertToCSV(serialStock));
-    var uri = "data:text/csv;charset=utf-8," + escape(CSV);
+    convertV2(delList)
+  //   const CSV = ConvertToCSV(delList);
+  //   // const JSON1 = JSON.stringify(delList);
+  //   // $('#csv').append(ConvertToCSV(serialStock));
+  //   var uri = "data:text/csv;charset=utf-8," + escape(CSV);
 
-    var link = document.createElement("a");
-    link.href = uri;
-    // link.style = "visibility:hidden";
-    link.download = ".csv";
-    // link.text = 'Download';
-    // console.log(link);
+  //   var link = document.createElement("a");
+  //   link.href = uri;
+  //   // link.style = "visibility:hidden";
+  //   link.download = ".csv";
+  //   // link.text = 'Download';
+  //   // console.log(link);
 
-    $("body").append(link);
-    // link.click();
-    // document.body.removeChild(link);
-    $("a").append("Download");
-  }
+  //   $("body").append(link);
+  //   // link.click();
+  //   // document.body.removeChild(link);
+  //   $("a").append("Download");
+  // }
 
     // convert second report
     // function convert2() {
@@ -215,7 +240,8 @@ function App() {
     //   // link.click();
     //   // document.body.removeChild(link);
     //   $("a").append("Download");
-    // }
+    }
+
   
   // ---------------------------------------------------------------------
   // Phone number fuction
@@ -628,6 +654,8 @@ function ProcessArrays() {
   console.log('||');
   console.log('VV');
   console.log(delList);
+
+  alert("The File is Ready to Download");
 }
 
   return (
@@ -697,9 +725,11 @@ function ProcessArrays() {
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
+        <button className="btn btn-success btn-outline-dark" onClick={convert}>Download File</button>
         </div>
         </div>
         <div className='col'>
+          <button onClick={message}>Message delivery List</button>
         {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={getConList}>Update Local Con List</button>
         </div> */}
