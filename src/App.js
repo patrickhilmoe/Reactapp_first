@@ -725,11 +725,13 @@ function ProcessArrays() {
         </div>
         <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={ProcessArrays}>Excel Processor</button>
+        </div>
+        <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={convert}>Download File</button>
         </div>
         </div>
         <div className='col'>
-          <button onClick={message}>Message delivery List</button>
+          {/* <button onClick={message}>Message delivery List</button> */}
         {/* <div className="col-sm" style={{padding:"10px", margin:'auto'}}>
         <button className="btn btn-success btn-outline-dark" onClick={getConList}>Update Local Con List</button>
         </div> */}
