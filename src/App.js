@@ -472,6 +472,8 @@ function ListKeyUpdate(array) {
       delete item ['Ship-to Address 2'];
       item['ShiptoFmtAddr3'] = item['Ship-to Address 3'];
       delete item ['Ship-to Address 3'];
+      item['ShiptoFmtAddr3'] = item['Ship To Address 3'];
+      delete item ['Ship-to Address 3'];
       item['ShiptoCity'] = item['Ship-to City'];
       delete item ['Ship-to City'];
       item['ShiptoState'] = item['Ship-to State'];
@@ -625,8 +627,6 @@ function ProcessArrays() {
   // arrays fetched from JSON Bin
   // const array4 = conListGit
   DeleteCol(array2);
-  console.log("checking descripton ref 1")
-  console.log(delList)
   // array2.forEach((x) => {
 //     (x.__rowNum__ > largestNum ) ? largestNum = x.__rowNum__ : largestNum = largestNum;
 // })
@@ -648,11 +648,7 @@ function ProcessArrays() {
       }
     });
   });
-  console.log("checking descripton ref 2")
-  console.log(delList)
   AddStock(array2, array3)
-  console.log("checking descripton ref 3")
-  console.log(delList)
   // console.log('Table Version')
   // console.table(delList);
   console.log('COPY AND PASTE');
