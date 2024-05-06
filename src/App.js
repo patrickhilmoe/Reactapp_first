@@ -615,6 +615,20 @@ function TagLocation(array2, array3, array4) {
   // console.table(array2);
 }
 
+function AddEmptyKeys(array) {
+  array.forEach((a) => {
+    if(!a.Row) {
+      a.Row = " "
+    }
+    if(!a.oldest) {
+      a.oldest = " "
+    }
+    if(a.Quantity) {
+      a.Quantity = " "
+    }
+  })
+}
+
 let largestNum = 0;
 function ProcessArrays() {
   const array1 = serialStock
@@ -648,7 +662,8 @@ function ProcessArrays() {
       }
     });
   });
-  AddStock(array2, array3)
+  AddStock(array2, array3);
+  AddEmptyKeys(array2);
   // console.log('Table Version')
   // console.table(delList);
   console.log('COPY AND PASTE');
