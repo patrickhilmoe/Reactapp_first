@@ -623,7 +623,7 @@ function AddEmptyKeys(array) {
     if(!a.oldest) {
       a.oldest = " "
     }
-    if(a.Quantity) {
+    if(!a.Quantity) {
       a.Quantity = " "
     }
   })
