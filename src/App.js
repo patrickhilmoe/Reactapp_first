@@ -473,7 +473,7 @@ function ListKeyUpdate(array) {
       item['ShiptoFmtAddr3'] = item['Ship-to Address 3'];
       delete item ['Ship-to Address 3'];
       item['ShiptoFmtAddr3'] = item['Ship To Address 3'];
-      delete item ['Ship-to Address 3'];
+      delete item ['Ship To Address 3'];
       item['ShiptoCity'] = item['Ship-to City'];
       delete item ['Ship-to City'];
       item['ShiptoState'] = item['Ship-to State'];
